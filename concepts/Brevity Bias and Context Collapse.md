@@ -1,0 +1,140 @@
+type:: [[Permanent Note]]
+status:: Working
+date-created:: 2025-12-06
+sources:: [[Literature - Agentic Context Engineering ACE (Zhang et al.)]]
+
+- # Brevity Bias and Context Collapse
+- **Two failure modes that plague automated context management systems — and why [[Manual context curation is the work|manual curation]] remains essential.**
+- ---
+- ## Brevity Bias
+	- ### Definition
+		- The tendency of automated systems to drop domain-specific insights in favor of concise summaries.
+		- "Drops domain insights for concise summaries" — Zhang et al. (2025)
+	- ### How It Happens
+		- Summarization optimizes for compression
+		- Compression removes "redundant" detail
+		- But that "redundant" detail often contains domain nuance
+		- Result: hollow summaries that lack the knowledge that made them valuable
+	- ### Example
+		- Original: "When deploying to production, always check the feature flags in config.yaml first, because the staging environment uses different defaults that will cause silent failures in the payment module"
+		- Summarized: "Check config before deploying"
+		- Lost: *which* config, *why* it matters, *what* fails
+	- ### Why It's Dangerous
+		- The summary looks adequate
+		- It passes automated quality checks
+		- But it's missing the **tacit knowledge** that made the original valuable
+		- Agent will now "check config" without knowing what to look for
+- ---
+- ## Context Collapse
+	- ### Definition
+		- The progressive erosion of detail through iterative rewriting.
+		- "Iterative rewriting erodes details over time" — Zhang et al. (2025)
+	- ### How It Happens
+		- Round 1: Original knowledge → Summary 1 (some loss)
+		- Round 2: Summary 1 → Summary 2 (more loss)
+		- Round N: Summary becomes nearly content-free
+		- Each compression loses fidelity; losses compound
+	- ### The Compaction Problem
+		- Context windows are finite
+		- Systems must compress to fit new information
+		- Each compression cycle loses detail
+		- Eventually context is a skeleton of what it once was
+	- ### Why It's Insidious
+		- Happens gradually
+		- Each individual compression seems reasonable
+		- But cumulative effect is catastrophic
+		- By the time you notice, the knowledge is unrecoverable
+- ---
+- ## Why These Matter for Agentic Workflows
+	- ### Automated Context Management Fails
+		- Auto-summarization → brevity bias
+		- Auto-compaction → context collapse
+		- This is why [[Manual context curation is the work]] — human judgment prevents these failure modes
+	- ### RAG Systems Are Vulnerable
+		- Retrieval returns compressed chunks
+		- Multiple retrievals get summarized together
+		- Context collapse happens across the retrieval pipeline
+	- ### Memory Systems Are Vulnerable
+		- "Remember this" → stored as summary
+		- "Recall that" → summary of summary
+		- Long-running agents accumulate compression losses
+- ---
+- ## Solution 1: Structured Incremental Updates (ACE Framework)
+	- The ACE framework (Zhang et al. 2025) prevents collapse through:
+	- **Don't rewrite — append and organize**
+		- New knowledge adds to structure, doesn't replace
+		- Detailed knowledge preserved
+	- **Three-phase curation**:
+		- Generation → Reflection → Curation
+		- Human-like review process
+	- **Explicit structure**
+		- Contexts as "evolving playbooks"
+		- Organization prevents detail from being "optimized away"
+- ---
+- ## Solution 2: Progressive Disclosure (Anthropic Skills)
+	- From [[Literature - Agent Skills Over Agents (Zhang & Murag, Anthropic)]]:
+	- ### The Problem It Solves
+		- Detailed knowledge vs. context window limits
+		- Want 100+ skills available, can't load all details at once
+		- Compression → brevity bias (lose domain insights)
+		- No compression → context collapse (window fills up)
+	- ### How Progressive Disclosure Works
+		- **Metadata in context**: Skill name, brief description (1-2 lines)
+		- **Full content on filesystem**: Complete instructions, scripts, examples
+		- **Load when needed**: Agent decides which skill to use, loads full content then
+		- Result: "Hundreds of skills" without overwhelming context
+	- ### Why This Avoids Both Failure Modes
+		- **Avoids brevity bias**: Full detailed content preserved in files
+		- **Avoids context collapse**: Only relevant content loaded each time
+		- **Key insight**: Don't compress → organize and selectively load
+	- ### The Quote
+		> "We want to protect the context window so that we can fit in hundreds of skills and make them truly composable. Skills are progressively disclosed. At runtime, only this metadata is shown to the model just to indicate that he has the skill. When an agent needs to use a skill, it can read in the rest of the skill.md."
+	- This is fundamentally different from compression:
+		- **Compression**: Detailed content → summary (information loss)
+		- **Progressive disclosure**: Detailed content → index → load on demand (no loss)
+- ---
+- ## Solution 3: Filesystem-Resident Tools
+	- From [[Literature - Agent Skills Over Agents (Zhang & Murag, Anthropic)]]:
+	- Traditional tools "always live in the context window" → contributes to collapse
+	- Filesystem-resident scripts:
+		- **Zero context cost** until needed
+		- **Self-documenting** (code explains itself when loaded)
+		- **Modifiable** (can be edited without rewriting context)
+	- Example: Python script for slide styling saved to `skills/` folder
+		- Not in context window initially
+		- Loaded only when creating slides
+		- Full detail preserved (not summarized)
+	- This moves procedural knowledge from "in-context" to "available on demand"
+- ---
+- ## Implications for My Framework
+	- ### Compaction Rituals Need Care
+		- [[Manual context curation is the work]] mentions compaction
+		- Risk: compaction introduces these failure modes
+		- Solution: structure-preserving compaction, not summarization
+	- ### Why Manual Curation Works
+		- Human curator applies judgment about what's essential
+		- Doesn't optimize for brevity
+		- Preserves context and nuance
+		- This is the tacit knowledge that resists externalization
+	- ### Design Principle
+		- **Prefer append-and-organize over rewrite-and-compress**
+		- When compaction is necessary, preserve structure
+		- Never auto-summarize domain knowledge
+- ---
+- ## Practical Recommendations
+	- 1. **Avoid auto-summarization** of knowledge base content
+	  2. **Archive, don't delete** — move old content to archive/ instead of compacting
+	  3. **Structured compaction** — if you must compress, preserve section headers and key terms
+	  4. **Version explicitly** — task_v1.md, task_v2.md allows recovery
+	  5. **Human review** before any compaction of important knowledge
+	  6. **Use progressive disclosure** — organize detailed knowledge, load on demand rather than compress
+	  7. **Move tools to filesystem** — scripts in skills/ folder vs. always-in-context
+- ---
+- ## Related
+	- [[Manual context curation is the work]]
+	- [[The Filesystem as Agentic Ba]]
+	- [[Context curation taxonomy]]
+	- [[Middle artifacts as collaboration checkpoints]]
+	- [[General Agents with Domain Skills]]
+	- [[Literature - Agent Skills Over Agents (Zhang & Murag, Anthropic)]]
+

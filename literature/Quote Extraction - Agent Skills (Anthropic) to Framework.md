@@ -1,0 +1,180 @@
+type:: [[Working Note]]
+status:: Working
+date-created:: 2025-12-08
+source:: [[Literature - Agent Skills Over Agents (Zhang & Murag, Anthropic)]]
+
+- # Quote Extraction: Agent Skills Talk → Framework Connections
+- This document maps key quotes from the Anthropic talk to existing permanent notes in the framework.
+- ---
+- ## [[The Filesystem as Agentic Ba]]
+	- ### Direct Support
+		- **"Skills are organized collections of files that package composable procedural knowledge for agents. In other words, they're folders."**
+			- Validates filesystem as the substrate for human-agent collaboration
+			- The simplicity is intentional — folders are universal, transparent, editable
+		- **"This simplicity is deliberate. We want something that anyone human or agent can create and use as long as they have a computer."**
+			- Aligns with ba concept — shared space accessible to both parties
+		- **"These also work with what you already have. You can version them in Git, you can throw them in Google Drive and you can zip them up and share with your team."**
+			- Filesystem as mature infrastructure, not custom tooling
+		- **"The core scaffolding can suddenly become as thin as just bash and file system which is great and really scalable."**
+			- Minimal runtime = filesystem + shell execution
+	- ### Connection to Your Framework
+		- Your note argues filesystem is ba (shared knowledge space) because it's persistent, navigable, editable by both, diffable, inspectable, interoperable
+		- Anthropic chose **the exact same primitive** for skills
+		- This is industry validation from major AI lab that filesystem is the right collaboration substrate
+- ---
+- ## [[Knowledge Externalization as Agentic Interface]]
+	- ### Direct Support
+		- **"Skills are organized collections of files that package composable procedural knowledge for agents."**
+			- "Procedural knowledge" = externalized expertise
+			- Packaging it in files = making tacit knowledge explicit and accessible
+		- **"Agents today are a lot like Mahesh. They're brilliant, but they lack expertise. They can't really absorb your expertise super well, and they don't learn over time."**
+			- The problem isn't intelligence — it's missing externalized domain knowledge
+			- Raw capability without packaged expertise = ineffective agent
+		- **"Who do you want doing your taxes? Is it going to be Mahesh, the 300 IQ mathematical genius, or is it Barry, an experienced tax professional? I would pick Barry every time. I don't want Mahesh to figure out the 2025 tax code from first principles."**
+			- Perfect analogy for why externalization matters
+			- Domain expertise (Barry) > raw intelligence (Mahesh)
+			- Agents need externalized knowledge (skills), not just compute
+		- **"A collecting and collective and evolving knowledge base of capabilities that's curated by people and agents inside of an organization."**
+			- Vision = organizational memory through externalized procedural knowledge
+			- Curation by humans converts tacit → explicit
+		- **"Anything that cloud writes down can be used efficiently by a future version of itself."**
+			- Standardized externalization format enables knowledge transfer across sessions
+	- ### Connection to Your Framework
+		- Your note: "Interaction with an agent is the process of converting tacit knowledge (intuition) into explicit knowledge (system context)."
+		- Anthropic: Skills are the concrete implementation of this conversion
+		- The "expertise problem" they identify is exactly the tacit/explicit gap
+		- Their solution (skills) is formalized externalization
+- ---
+- ## [[Manual context curation is the work]]
+	- ### Direct Support
+		- **"A collecting and collective and evolving knowledge base of capabilities that's curated by people and agents inside of an organization."**
+			- "Curated by people" = intentional, manual organization
+			- Not automatic — requires human judgment
+		- **"We're also talking to really large developer productivity teams... that are using skills as a way to deploy agents like cloud code and teach them about code style best practices and other ways that they want their developers to work internally."**
+			- Teaching agents = manual knowledge curation
+			- Organizational knowledge must be intentionally packaged into skills
+		- **"Fortune 100s... using skills as a way to teach agents about their organizational best practices and the weird and unique ways that they use this bespoke internal software."**
+			- "Weird and unique ways" = tacit organizational knowledge
+			- Requires manual capture — no automation can discover this
+	- ### Connection to Your Framework
+		- Your note: "Managing both remembering (what gets saved) and recall (what gets retrieved) manually is currently what works best."
+		- Anthropic's skill ecosystem proves this at scale
+		- Enterprise adoption = manual curation of domain expertise into skills
+		- The work of creating skills = context curation work
+- ---
+- ## Procedural Context Files (Skills & AGENTS.md Pattern)
+	- ### Direct Support
+		- **"Skills are organized collections of files that package composable procedural knowledge for agents."**
+			- Skills contain instructions, scripts, documentation
+			- Central skill.md contains "core instruction and directory for the rest of the folder"
+		- **"At runtime, only this metadata is shown to the model just to indicate that he has the skill. When an agent needs to use a skill, it can read in the rest of the skill.md, which contains the core instruction and directory for the rest of the folder."**
+			- skill.md = index/manifest for procedural knowledge
+			- Progressive disclosure of instructions
+		- **Scripts as tools**: "Claude kept writing the same Python script over and over again to apply styling to slides. So we just asked cloud to save it inside of the skill as a tool for his future self."**
+			- Procedural knowledge captured as runnable code
+			- Reusable across sessions
+	- ### Connection to Your Framework
+		- AGENTS.md/procedural context files = single-project instructions
+		- Anthropic skills = formalized, distributable, composable version
+		- Both package "how to do X" knowledge for agents
+		- Skills add: progressive disclosure, dependency management, versioning
+		- Your framework's procedural context concept validated and extended by industry
+- ---
+- ## [[Brevity Bias and Context Collapse]]
+	- ### Direct Support
+		- **"We want to protect the context window so that we can fit in hundreds of skills and make them truly composable."**
+			- Direct acknowledgment of context window constraints
+			- Design goal: minimize token usage
+		- **"Skills are progressively disclosed. At runtime, only this metadata is shown to the model just to indicate that he has the skill."**
+			- Solution: show minimal information until needed
+			- Full content loaded only when agent decides to use skill
+		- **"Code solves some of these issues... [tools] can live in the file system until they're really needed and used."**
+			- Filesystem residency = zero context cost until retrieval
+			- Contrast with traditional tools that "always live in the context window"
+	- ### Connection to Your Framework
+		- Your note addresses tension between rich context and limited windows
+		- Anthropic's progressive disclosure is practical solution
+		- Metadata-first design lets agents access hundreds of skills
+		- Validates filesystem-resident knowledge over in-context knowledge
+- ---
+- ## [[Supervision is context curation, not action approval]]
+	- ### Indirect Support
+		- **"As you interact with an agent and give it feedback and more institutional knowledge, it starts to get better and all of the agents inside your team and your org get better as well."**
+			- Feedback refines the knowledge base (skills), not just approving outputs
+			- Supervision = improving the context system
+		- **"Claude can already create skills for you today using our skill creator skill and we're going to continue pushing in that direction."**
+			- Agent generates skills → human curates/refines them
+			- Supervision is editing the procedural knowledge, not micromanaging execution
+	- ### Connection to Your Framework
+		- Your note: supervision should focus on context quality, not step-by-step approval
+		- Skill creation/editing is context curation activity
+		- Anthropic's vision: humans supervise by improving skill library
+- ---
+- ## [[The Autonomy Slider]]
+	- ### Indirect Support
+		- **"Our goal is that claude on day 30 of working with you is going to be a lot better on cloud on day one."**
+			- As skills accumulate, agent capability increases
+			- Better skills → can delegate more → higher autonomy
+		- **"When someone joins your team and starts using Claude for the first time, it already knows what your team cares about."**
+			- Rich skill library = higher starting autonomy for new users
+			- Context quality determines safe delegation level
+	- ### Connection to Your Framework
+		- Your note: Better context enables higher autonomy
+		- Anthropic: Day 30 > Day 1 because of accumulated skills
+		- Skills are the mechanism for moving autonomy slider right
+- ---
+- ## [[The human works through the agent's hands]]
+	- ### Direct Support
+		- **"Code is not just a use case but the universal interface to the digital world."**
+			- Agent executes via code
+			- Human expertise → skills → agent execution
+		- **Example: Financial report** — "The model can call the API to pull in data and do research. It can organize that data in the file system. It can analyze it with Python and then synthesize the insight in old file format all through code."**
+			- Human designs workflow → packages in skill → agent executes
+			- Human intent → agent capability
+	- ### Connection to Your Framework
+		- Your note: Human retains responsibility, agent executes
+		- Anthropic: Skills encode human expertise, agent applies it
+		- Division of labor: human = knowledge architect, agent = executor
+- ---
+- ## New Concepts Not Yet in Framework
+	- ### 1. Scripts vs. Traditional Tools
+		- **"Traditional tools have pretty obvious problems. Some tools have poorly written instructions and are pretty ambiguous and when the model is struggling, it can't really make a change to the tool."**
+		- **"Code solves some of these issues. It's self-documenting. It is modifiable and can live in the file system until they're really needed and used."**
+		- → Suggests new note: **[[Scripts vs. MCP Tools]]**
+	- ### 2. Skills + MCP Division of Labor
+		- **"MCP is providing the connection to the outside world while skills are providing the expertise."**
+		- **"Developers are using and building skills that orchestrate workflows of multiple MCP tools stitched together to do more complex things."**
+		- → Suggests new note: **[[MCP for Connectivity, Skills for Expertise]]**
+	- ### 3. Non-Technical Skill Builders
+		- **"We're seeing skills that are being built by people that aren't technical. These are people in functions like finance, recruiting, accounting, legal, and a lot more."**
+		- → Validates accessibility of externalization paradigm
+		- → Could extend **[[Knowledge Externalization as Agentic Interface]]** or create new note
+	- ### 4. Agent Learning Timeline (Day 1/10/30)
+		- Day 1: Standardized format ensures transferability
+		- Day 10: Memory becomes tangible (skill library grows)
+		- Day 30: Dynamic evolution (add/update/remove skills)
+		- → Covered in: **[[Agent Amnesia and the Continuity Problem]]**
+	- ### 5. Computing Layers Analogy
+		- Models = Processors (immense potential, requires infrastructure)
+		- Runtime = OS (orchestration, resource management)
+		- Skills = Applications (where developers encode expertise)
+		- → Interesting framing for explaining agent stack to newcomers
+- ---
+- ## Summary: Validation Strength
+	- ### Strong Validation (Core Concepts Match)
+		- [[The Filesystem as Agentic Ba]] — Anthropic chose folders as skill primitive
+		- [[Knowledge Externalization as Agentic Interface]] — Skills are packaged procedural knowledge
+		- [[Manual context curation is the work]] — Enterprise use requires intentional skill creation
+	- ### Extends Existing Concepts
+		- Procedural context files — Skills formalize and distribute this concept
+		- [[Brevity Bias and Context Collapse]] — Progressive disclosure as solution
+	- ### Indirect Support
+		- [[The Autonomy Slider]] — Day 30 > Day 1 via skill accumulation
+		- [[Supervision is context curation, not action approval]] — Feedback improves skills, not just outputs
+	- ### Suggests New Directions
+		- Scripts as filesystem-resident, modifiable tools
+		- Skills/MCP complementarity (expertise vs. connectivity)
+		- Non-technical builders (externalization accessibility)
+		- Temporal progression of agent capability
+
+

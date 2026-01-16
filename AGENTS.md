@@ -1,0 +1,1 @@
+Before creating new notes or editing existing notes, present the change suggestions to the user and ask for confirmation.

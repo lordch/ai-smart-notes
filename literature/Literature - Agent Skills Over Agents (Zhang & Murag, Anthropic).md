@@ -1,0 +1,186 @@
+type:: [[Literature Note]]
+status:: Processed
+date-created:: 2025-12-08
+source-url:: https://www.youtube.com/watch?v=CEvIs9y1uog
+author:: Barry Zhang & Mahesh Murag
+publication:: AI Engineer Conference (Anthropic)
+date-published:: 2025
+
+- # Literature Note: Agent Skills Over Agents
+- **Source**: [Don't Build Agents, Build Skills Instead](https://www.youtube.com/watch?v=CEvIs9y1uog) — Barry Zhang & Mahesh Murag, Anthropic, AI Engineer Conference (2025)
+- ---
+- ## Core Argument
+	- The agent ecosystem is converging on **general-purpose agents with domain-specific skills** rather than specialized agents for each use case. See [[General Agents with Domain Skills]].
+	- Key shift: "Code is all we need" — agents need:
+		- **Runtime environment** (filesystem + bash/shell)
+		- **Minimal scaffolding** (thin agent loop)
+		- **Packaged e~xpertise** (skills = organized folders with instructions + scripts)
+	- The bottleneck is not intelligence, but **domain expertise** — like hiring an experienced professional vs. a brilliant generalist.
+- ---
+- ## Key Claims
+	- ### Code as Universal Interface
+		- "Code is not just a use case but the universal interface to the digital world."
+		- Example: Financial report generation uses code to:
+			- Call APIs (research)
+			- Organize data (filesystem)
+			- Analyze (Python)
+			- Synthesize (file formats)
+		- This makes "the core scaffolding... as thin as just bash and file system."
+	- ### The Expertise Problem
+		- "Agents today are a lot like Mahesh. They're brilliant, but they lack expertise."
+		- Analogy: Would you want a 300 IQ genius or an experienced tax professional doing your taxes?
+		- Problems with raw intelligence:
+			- "They can't really absorb your expertise super well"
+			- "They don't learn over time"
+			- "They're often missing the important context up front"
+	- ### Skills as Solution
+		- **Definition**: "Skills are organized collections of files that package composable procedural knowledge for agents. In other words, they're folders."
+		- Design principles:
+			- Simple primitive (folders work everywhere)
+			- Work with existing tools (Git, Google Drive, zip)
+			- Human-readable and editable
+			- Agent-creatable
+		- "This simplicity is deliberate. We want something that anyone human or agent can create and use as long as they have a computer."
+	- ### Scripts as Superior Tools
+		- Traditional MCP tools have limitations:
+			- Poorly written instructions (ambiguous)
+			- Model can't modify tool when stuck
+			- Always live in context window
+		- Code/scripts solve these:
+			- **Self-documenting**
+			- **Modifiable** (agent can edit)
+			- **Filesystem-resident** (loaded only when needed)
+		- Example: Claude kept rewriting Python styling script for slides → saved as reusable tool in skill
+	- ### Progressive Disclosure
+		- "Skills are progressively disclosed. At runtime, only this metadata is shown to the model just to indicate that he has the skill."
+		- Load full skill.md (core instructions + directory) only when needed
+		- "We want to protect the context window so that we can fit in hundreds of skills and make them truly composable."
+- ---
+- ## The Skill Ecosystem
+	- Three types observed since launch (5 weeks ago):
+	- ### 1. Foundational Skills
+		- Give agents new general or domain-specific capabilities
+		- Examples:
+			- **Document skills** (Anthropic) — professional office document creation/editing
+			- **Scientific research skills** (Cadence) — EHR data analysis, bioinformatics libraries
+	- ### 2. Third-Party Skills
+		- Partners build skills for their products
+		- Examples:
+			- **Browserbase** — skill for Stagehand browser automation
+			- **Notion** — skills for workspace research
+	- ### 3. Enterprise Skills
+		- "Company and team specific skills built for an organization"
+		- Use cases:
+			- Organizational best practices
+			- Internal software usage patterns
+			- Code style standards for developer teams
+		- "Fortune 100s... using skills as a way to teach agents about their organizational best practices and the weird and unique ways that they use this bespoke internal software."
+- ---
+- ## Emerging Trends
+	- ### Increasing Complexity
+		- Basic: skill.md with prompts/instructions
+		- Advanced: "package software, executables, binaries, files, code, scripts, assets, and a lot more"
+		- "Skills might take weeks or months to build and be maintained" (like traditional software)
+	- ### Skills + MCP Synergy
+		- "Developers are using and building skills that orchestrate workflows of multiple MCP tools stitched together"
+		- Division of labor:
+			- **MCP** = connection to outside world (data, external systems)
+			- **Skills** = expertise (how to use those connections)
+	- ### Non-Technical Builders
+		- "We're seeing skills that are being built by people that aren't technical. These are people in functions like finance, recruiting, accounting, legal, and a lot more."
+		- Validates accessibility goal: skills make agents extensible for non-coders
+- ---
+- ## Agent Architecture Convergence
+	- The emerging general agent stack:
+	- ```
+	  ┌─────────────────────────────────┐
+	  │      Agent Loop                 │  ← Token management, context control
+	  ├─────────────────────────────────┤
+	  │  Runtime Environment            │  ← Filesystem + code execution
+	  ├─────────────────────────────────┤
+	  │  MCP Servers                    │  ← External tools & data
+	  ├─────────────────────────────────┤
+	  │  Skill Library (100s-1000s)     │  ← Domain expertise, progressively loaded
+	  └─────────────────────────────────┘
+	  ```
+	- "Giving an agent a new capability in a new domain might just involve equipping it with the right set of MCP servers and the right library of skills."
+	- Example: Financial services + life sciences launches included domain-specific MCP servers + skills
+- ---
+- ## Future Directions
+	- Three focus areas as skills mature:
+	- ### 1. Software Engineering Practices
+		- **Testing & evaluation**: Ensure agents load/trigger skills correctly
+		- **Output quality measurement**: Validate skill-equipped agent performance
+		- "Start to treat skills like we treat software"
+	- ### 2. Versioning
+		- Track skill evolution and resulting agent behavior changes
+		- "Clear lineage over time" for reproducibility
+	- ### 3. Dependency Management
+		- Skills should declare dependencies on:
+			- Other skills
+			- MCP servers
+			- Environment packages
+		- Goal: "Make agents a lot more predictable in different runtime environments"
+- ---
+- ## Vision: Organizational Knowledge Base
+	- "A collecting and collective and evolving knowledge base of capabilities that's curated by people and agents inside of an organization."
+	- Benefits:
+		- Team knowledge compounds: "As you interact with an agent and give it feedback and more institutional knowledge, it starts to get better and all of the agents inside your team and your org get better as well."
+		- Onboarding: "When someone joins your team and starts using Claude for the first time, it already knows what your team cares about."
+		- Community sharing: Skills built elsewhere make your agents better
+	- Comparison to computing history:
+		- **Models** = processors (immense potential, massive investment)
+		- **Agent runtime** = operating system (orchestration, resource management)
+		- **Skills** = applications (where millions of developers encode expertise)
+	- "We hope that skills can help us open up this layer for everyone."
+- ---
+- ## Skills and Continuous Learning
+	- Skills designed as "concrete steps towards continuous learning"
+	- Three phases as usage grows:
+	- ### Day 1: Standardized Format
+		- "Anything that cloud writes down can be used efficiently by a future version of itself."
+		- Learning is transferable across sessions
+	- ### Day 10: Tangible Memory
+		- "Skills makes the concept of memory more tangible."
+		- Capture only **procedural knowledge** for specific tasks (not everything)
+	- ### Day 30: Dynamic Evolution
+		- "Cloud can acquire new capabilities instantly, evolve them as needed, and then drop the ones that become obsolete."
+		- More cost-effective than fine-tuning for daily-changing information
+	- Goal: "Claude on day 30 of working with you is going to be a lot better on cloud on day one."
+	- "Claude can already create skills for you today using our skill creator skill"
+- ---
+- ## Quotes Worth Preserving
+	- "We think code is all we need."
+	- "Code is not just a use case but the universal interface to the digital world."
+	- "Agents today are a lot like Mahesh. They're brilliant, but they lack expertise."
+	- "Skills are organized collections of files that package composable procedural knowledge for agents. In other words, they're folders."
+	- "This simplicity is deliberate. We want something that anyone human or agent can create and use as long as they have a computer."
+	- "We want to protect the context window so that we can fit in hundreds of skills and make them truly composable."
+	- "MCP is providing the connection to the outside world while skills are providing the expertise."
+	- "A collecting and collective and evolving knowledge base of capabilities that's curated by people and agents inside of an organization."
+	- "Anything that cloud writes down can be used efficiently by a future version of itself."
+	- "It's time to stop rebuilding agents and start building skills instead."
+- ---
+- ## Relation to My Framework
+	- **Validates**: [[The Filesystem as Agentic Ba]] — "folders" as the primitive for skills directly supports filesystem as collaboration space
+	- **Validates**: [[Knowledge Externalization as Agentic Interface]] — skills are literally "packaged procedural knowledge" = externalized expertise
+	- **Validates**: [[Manual context curation is the work]] — "curated by people and agents" = intentional knowledge organization
+	- **Extends**: Procedural context concept — skills are formalized, distributable version of project-level instruction files (AGENTS.md pattern)
+	- **Extends**: [[Brevity Bias and Context Collapse]] — progressive disclosure addresses context window constraints
+	- **Extends**: [[The Supervision Split]] — Non-technical skill builders = users supervising agents and encoding that supervision as reusable autonomy
+	- **New insight**: Scripts as superior to traditional tools — self-documenting, modifiable, filesystem-resident
+	- **New insight**: Skills + MCP division of labor — connectivity (MCP) vs. expertise (skills)
+	- **New insight**: Day 1/10/30 progression — concrete model for how procedural knowledge accumulates value over time, addressing [[Agent Amnesia and the Continuity Problem]]
+	- **New insight**: Non-technical skill builders — validates that externalization paradigm isn't just for developers
+	- **New parallel**: Computing layers analogy (models/OS/apps) maps to (processors/OS/applications)
+- ---
+- ## Extracted Concepts
+	- → [[The Filesystem as Agentic Ba]]
+	- → [[Knowledge Externalization as Agentic Interface]]
+	- → [[Brevity Bias and Context Collapse]]
+	- → [[Manual context curation is the work]]
+	- → [[The Supervision Split]]
+	- → [[Agent Amnesia and the Continuity Problem]]
+	- → [[General Agents with Domain Skills]]
+	- → Potential new note: [[Scripts vs. MCP Tools]]
+	- → Potential new note: [[Skills as Organizational Memory]]
