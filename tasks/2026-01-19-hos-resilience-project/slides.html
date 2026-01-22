@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jak pracować z AI | House of Skills</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --text: #fafafa;
+            --accent: #3b82f6;
+            --muted: #737373;
+            --card: #171717;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            padding: 8vh 10vw;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 400;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        .big {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .center {
+            text-align: center;
+            align-items: center;
+        }
+
+        .accent {
+            color: var(--accent);
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .small {
+            font-size: 1.2rem;
+            color: var(--muted);
+            margin-top: 2rem;
+        }
+
+        /* Comparison layouts */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 2rem;
+        }
+
+        .compare-item {
+            padding: 2rem;
+        }
+
+        .compare-item.old {
+            opacity: 0.4;
+        }
+
+        .compare-item h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .compare-item p {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            line-height: 1.4;
+        }
+
+        /* Flow diagram */
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-item {
+            background: var(--card);
+            padding: 1.5rem 2.5rem;
+            border-radius: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: var(--muted);
+        }
+
+        /* Folder structure */
+        .folder {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+            line-height: 1.8;
+            background: var(--card);
+            padding: 2rem 3rem;
+            border-radius: 1rem;
+            margin-top: 2rem;
+        }
+
+        .folder .comment {
+            color: var(--accent);
+            margin-left: 1rem;
+        }
+
+        /* Role grid */
+        .roles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .role {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+        }
+
+        .role h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .role ul {
+            list-style: none;
+            font-size: 1.3rem;
+            line-height: 2;
+        }
+
+        .role.agent {
+            opacity: 0.5;
+        }
+
+        .role.you {
+            border: 2px solid var(--accent);
+        }
+
+        /* Sessions */
+        .sessions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .session {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 1rem;
+        }
+
+        .session-num {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .session h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .session p {
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Benefits */
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .benefit {
+            padding: 1.5rem;
+        }
+
+        .benefit h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit p {
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        /* Skills */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .skill {
+            background: var(--card);
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .nav button {
+            background: var(--card);
+            border: none;
+            color: var(--text);
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background 0.2s;
+        }
+
+        .nav button:hover {
+            background: var(--accent);
+        }
+
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .slide-num {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* Quote */
+        .quote {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-style: italic;
+            color: var(--muted);
+            border-left: 4px solid var(--accent);
+            padding-left: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Diagram */
+        .diagram {
+            margin-top: 3rem;
+        }
+
+        .diagram-row {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .diagram-label {
+            width: 200px;
+            font-size: 1.1rem;
+            color: var(--muted);
+        }
+
+        .diagram-bar {
+            height: 3rem;
+            background: var(--accent);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            padding-left: 1rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress" id="progress"></div>
+
+    <!-- Slide 1: Title -->
+    <div class="slide center active">
+        <h1>Jak pracować z AI<br><span class="accent">nad złożonymi zadaniami</span></h1>
+        <p class="small">House of Skills | Warsztat</p>
+    </div>
+
+    <!-- Slide 2: Your question -->
+    <div class="slide center">
+        <p class="muted" style="font-size: 1.5rem; margin-bottom: 1rem;">Wasze pytanie</p>
+        <h1 class="big">"Czy wchodzić<br>w odporność?"</h1>
+    </div>
+
+    <!-- Slide 3: Not a question -->
+    <div class="slide center">
+        <h1>To nie jest pytanie.</h1>
+        <h1 class="accent">To jest projekt.</h1>
+    </div>
+
+    <!-- Slide 4: Old vs New - Question -->
+    <div class="slide">
+        <h2>Zmiana podejścia</h2>
+        <div class="compare">
+            <div class="compare-item old">
+                <h3>Typowe</h3>
+                <p>Pytasz<br>↓<br>Odpowiada<br>↓<br>Pytasz znowu</p>
+            </div>
+            <div class="compare-item">
+                <h3>Nasze</h3>
+                <p>Delegujesz<br>↓<br>Wykonuje<br>↓<br><strong>Przeglądasz</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Old vs New - Output -->
+    <div class="slide">
+        <h2>Co dostajesz</h2>
+        <div class="compare">
+            <div class="compare-item old">
+                <h3>Typowe</h3>
+                <p>Tekst do skopiowania</p>
+            </div>
+            <div class="compare-item">
+                <h3>Nasze</h3>
+                <p><span class="accent">Gotowe pliki</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Old vs New - Sessions -->
+    <div class="slide">
+        <h2>Między sesjami</h2>
+        <div class="compare">
+            <div class="compare-item old">
+                <h3>Typowe</h3>
+                <p>Każda sesja od zera</p>
+            </div>
+            <div class="compare-item">
+                <h3>Nasze</h3>
+                <p><span class="accent">Budujemy</span> na poprzedniej</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Structure -->
+    <div class="slide">
+        <h1>Struktura projektu</h1>
+        <div class="folder">
+            <div>hos-resilience-analysis/</div>
+            <div>&nbsp;&nbsp;├── brief.md <span class="comment">← co chcemy wiedzieć</span></div>
+            <div>&nbsp;&nbsp;├── research/</div>
+            <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── methodology.md</div>
+            <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── market-poland.md</div>
+            <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── competitors.md</div>
+            <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── corporate-spend.md</div>
+            <div>&nbsp;&nbsp;├── synthesis/</div>
+            <div>&nbsp;&nbsp;└── recommendation.md <span class="comment">← decyzja</span></div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Checkpoint -->
+    <div class="slide center">
+        <h1>Każdy plik =</h1>
+        <h1 class="big accent">checkpoint</h1>
+        <p class="small">Miejsce gdzie możesz przerwać, przejrzeć, skorygować</p>
+    </div>
+
+    <!-- Slide 9: Roles -->
+    <div class="slide">
+        <h1>Podział ról</h1>
+        <div class="roles">
+            <div class="role agent">
+                <h3>Agent</h3>
+                <ul>
+                    <li>Przeszukuje źródła</li>
+                    <li>Zbiera dane</li>
+                    <li>Syntetyzuje</li>
+                    <li>Produkuje drafty</li>
+                </ul>
+            </div>
+            <div class="role you">
+                <h3>Wy</h3>
+                <ul>
+                    <li>Definiujecie co ważne</li>
+                    <li>Oceniacie jakość</li>
+                    <li>Decydujecie kierunek</li>
+                    <li><strong>Podejmujecie decyzję</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Quote -->
+    <div class="slide center">
+        <p class="quote">"Agent ma ręce.<br>Wy macie osąd, gdzie je skierować."</p>
+    </div>
+
+    <!-- Slide 11: 3 Sessions -->
+    <div class="slide">
+        <h1>Trzy sesje</h1>
+        <div class="sessions">
+            <div class="session">
+                <div class="session-num">1</div>
+                <h3>Setup + Brief</h3>
+                <p>Definiujemy pytania<br>Rozbijamy na kawałki<br>Zapisujemy do plików</p>
+            </div>
+            <div class="session">
+                <div class="session-num">2</div>
+                <h3>Review + Steering</h3>
+                <p>Przeglądamy research<br>Oceniacie jakość<br>Korygujemy kierunek</p>
+            </div>
+            <div class="session">
+                <div class="session-num">3</div>
+                <h3>Synthesis</h3>
+                <p>Wnioski z danych<br>Formułujemy rekomendację<br>Wy decydujecie</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Why - Control -->
+    <div class="slide">
+        <h1>Dlaczego tak?</h1>
+        <div class="benefits">
+            <div class="benefit">
+                <h3>Kontrola</h3>
+                <p>Widzicie co agent wie i robi</p>
+            </div>
+            <div class="benefit">
+                <h3>Jakość</h3>
+                <p>Błąd poprawiacie wcześnie</p>
+            </div>
+            <div class="benefit">
+                <h3>Efektywność</h3>
+                <p>Agent — ciężka robota<br>Wy — wartościowa robota</p>
+            </div>
+            <div class="benefit">
+                <h3>Kumulacja</h3>
+                <p>Artefakty zostają, wiedza się buduje</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Leverage -->
+    <div class="slide">
+        <h1>Gdzie poprawiać?</h1>
+        <div class="diagram">
+            <div class="diagram-row">
+                <div class="diagram-label">Błąd w researchu</div>
+                <div class="diagram-bar" style="width: 80%;">→ 1000 linii do poprawy</div>
+            </div>
+            <div class="diagram-row">
+                <div class="diagram-label">Błąd w planie</div>
+                <div class="diagram-bar" style="width: 40%;">→ 100 linii</div>
+            </div>
+            <div class="diagram-row">
+                <div class="diagram-label">Błąd w detalu</div>
+                <div class="diagram-bar" style="width: 10%;">→ 1</div>
+            </div>
+        </div>
+        <p class="small">Dlatego przeglądamy research i plan, nie tylko output</p>
+    </div>
+
+    <!-- Slide 14: Skills -->
+    <div class="slide">
+        <h1>Czego się nauczycie</h1>
+        <div class="skills">
+            <div class="skill">Decomposition</div>
+            <div class="skill">Externalization</div>
+            <div class="skill">Checkpointing</div>
+            <div class="skill">Steering</div>
+            <div class="skill">Cumulation</div>
+        </div>
+        <p class="small" style="margin-top: 3rem;">To nie jest nauka narzędzia. To metodologia pracy.</p>
+    </div>
+
+    <!-- Slide 15: What you get -->
+    <div class="slide">
+        <h1>Co dostaniecie</h1>
+        <div style="margin-top: 2rem; font-size: 1.5rem; line-height: 2.5;">
+            <p><span class="accent">1.</span> Odpowiedź — czy wchodzić, jak, co oferować</p>
+            <p><span class="accent">2.</span> Artefakt — folder z całym projektem</p>
+            <p><span class="accent">3.</span> Metodologia — do kolejnych projektów</p>
+        </div>
+    </div>
+
+    <!-- Slide 16: Key message -->
+    <div class="slide center">
+        <h1 class="muted" style="font-weight: 400;">Nie będziemy rozmawiać z AI.</h1>
+        <h1 class="big accent" style="margin-top: 1rem;">Będziemy przez AI pracować.</h1>
+    </div>
+
+    <!-- Slide 17: Start -->
+    <div class="slide center">
+        <h1 class="big">Zaczynamy</h1>
+        <h2>Co chcecie wiedzieć?</h2>
+    </div>
+
+    <div class="nav">
+        <button onclick="prevSlide()">←</button>
+        <button onclick="nextSlide()">→</button>
+    </div>
+
+    <div class="slide-num" id="slideNum"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let current = 0;
+
+        function showSlide(n) {
+            slides[current].classList.remove('active');
+            current = (n + slides.length) % slides.length;
+            slides[current].classList.add('active');
+            document.getElementById('progress').style.width = ((current + 1) / slides.length * 100) + '%';
+            document.getElementById('slideNum').textContent = (current + 1) + ' / ' + slides.length;
+        }
+
+        function nextSlide() { showSlide(current + 1); }
+        function prevSlide() { showSlide(current - 1); }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Touch support
+        let touchStart = 0;
+        document.addEventListener('touchstart', (e) => touchStart = e.touches[0].clientX);
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStart - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) diff > 0 ? nextSlide() : prevSlide();
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>

@@ -2,9 +2,33 @@
 
 Instrukcje dla agenta AI pracującego z tą bazą wiedzy.
 
-## Kontekst projektu
+## Kim jestem
 
-Baza wiedzy służąca rozwojowi praktyki konsultingowej w obszarze Human-AI Collaboration. To jest "dogfooding" — praktykuję to, czego uczę w szkoleniach: zarządzanie wiedzą w organizacji pod kątem maksymalnego wykorzystania pracy agentowej.
+Konsultant budujący praktykę w obszarze **Human-Agent Collaboration** — sposobu pracy gdzie człowiek steruje, agent wykonuje. Trzecia droga między chatem (każda sesja od zera) a pełną autonomią (nie działa).
+
+Ta baza wiedzy to "dogfooding" — praktykuję to, czego uczę: zarządzanie wiedzą pod kątem maksymalnego wykorzystania pracy agentowej.
+
+## Wizja: Human-Agent Collaboration
+
+- **Człowiek jest kierownikiem** — decyduje co, po co, czy dobrze
+- **Agent jest wykonawcą** — produkuje output, robi research, iteruje
+- **Kontekst jest zeksternalizowany** — wiedza w plikach, nie w głowie
+- **Artefakty są medium** — praca żyje w plikach, nie w chatach
+- **Wiedza się kumuluje** — każda sesja buduje na poprzedniej
+
+## Kluczowe pojęcia
+
+| Pojęcie | Znaczenie |
+|---------|-----------|
+| **Human-Agent Collaboration** | Sposób pracy: człowiek steruje, agent wykonuje |
+| **Agentic Workspace** | Środowisko (folder + pliki + instrukcje) które umożliwia collaboration |
+| **Context Engineering** | Umiejętność organizacji wiedzy tak, żeby agent mógł jej użyć |
+| **Artefakt** | Plik jako output pracy — checkpoint, deliverable |
+
+## Oferty
+
+1. **AI Workspace Build** — budowa kompletnego środowiska pracy z AI (struktura, kontekst, szablony, skille). Szczegóły: `strategy/offers/AI Workspace Build.md`
+2. **Workflow Implementation Sprints** — wdrożenie jednego konkretnego workflow'u w 2-4 tygodnie. Szczegóły: `strategy/offers/Workflow Implementation Sprints.md`
 
 ## Kluczowa zasada
 

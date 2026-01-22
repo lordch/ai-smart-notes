@@ -29,57 +29,73 @@
 
 ### 2025
 
-| Tytuł | Czasopismo | Rola | Link |
-|-------|------------|------|------|
-| Knowledge about HIV among Polish high school students: Effects of a single lesson intervention | Przegląd Epidemiologiczny | Autorka | [🔗 PDF](https://www.przeglepidemiol.pzh.gov.pl/Knowledge-about-HIV-among-Polish-high-school-students-Effects-of-a-single-lesson,211093,0,2.html) |
+| Tytuł | Czasopismo | Plik lokalny | Link online |
+|-------|------------|--------------|-------------|
+| Knowledge about HIV among Polish high school students: Effects of a single lesson intervention | Przegląd Epidemiologiczny | — | [🔗 PDF](https://www.przeglepidemiol.pzh.gov.pl/Knowledge-about-HIV-among-Polish-high-school-students-Effects-of-a-single-lesson,211093,0,2.html) |
 
 ### 2024
 
-| Tytuł | Czasopismo | Rola | Link |
-|-------|------------|------|------|
-| Screening and prevention of HPV-related anogenital cancers in women living with HIV in Europe: Results from a systematic review | HIV Medicine | Pierwsza autorka | [🔗 PPM WUM](https://ppm.wum.edu.pl/info/article/WUM2354004352ce4a6d96f93d7e4f4f5ac2/) |
-| Barriers to HIV testing and possible interventions to improve access to HIV healthcare among migrants, with a focus on migrant women: Results from a European survey | HIV Medicine | Współautorka | [🔗 PPM WUM](https://ppm.wum.edu.pl/info/article/WUM31f0cef690c44f41a03d25565e264ec2/) |
+| Tytuł | Czasopismo | Plik lokalny | Link online |
+|-------|------------|--------------|-------------|
+| Screening and prevention of HPV-related anogenital cancers in women living with HIV in Europe | HIV Medicine | — | [🔗 PPM WUM](https://ppm.wum.edu.pl/info/article/WUM2354004352ce4a6d96f93d7e4f4f5ac2/) |
+| Barriers to HIV testing among migrants, with focus on migrant women | HIV Medicine | — | [🔗 PPM WUM](https://ppm.wum.edu.pl/info/article/WUM31f0cef690c44f41a03d25565e264ec2/) |
 
 ### 2023
 
-| Tytuł | Czasopismo | Rola | Link |
-|-------|------------|------|------|
-| Late HIV diagnosis among migrant women living in Europe — a systematic review of barriers to HIV testing | AIDS Care | Współautorka | [🔗 PubMed Central](https://pmc.ncbi.nlm.nih.gov/articles/PMC10148112/) |
+| Tytuł | Czasopismo | Plik lokalny | Link online |
+|-------|------------|--------------|-------------|
+| Late HIV diagnosis among migrant women living in Europe — systematic review | IJID Regions | [📄 XML](publikacje/PMC10148112-late-hiv-migrants.xml) | [🔗 PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC10148112/) |
 
 ### 2022
 
-| Tytuł | Czasopismo | Rola | Link |
-|-------|------------|------|------|
-| Frailty and prefrailty in people living with HIV, with focus on women living with HIV | International Journal of STD & AIDS | Współautorka | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM5f5c496b80354178a1ba61ce90d32a22/) |
-| Undetectable HIV Equals Untransmittable HIV (U = U) Statement in Women. Are we there Yet? | Acta Scientific Women's Health | Autorka korespondencyjna | [🔗 Acta Scientific](https://actascientific.com/ASWH/ASWH-04-0374.php) |
-| Delayed HIV diagnosis during the COVID-19 pandemic in Poland: A call for targeted HIV testing for those under suspicion of SARS-CoV-2 | HIV Medicine | Współautorka | [🔗 PubMed Central](https://pmc.ncbi.nlm.nih.gov/articles/PMC9877591/) |
-| Enhancing well‐being and alleviating depressive symptoms in people with HIV/AIDS: An intervention based on if–then plans with self‐affirming cognitions | Applied Psychology: Health and Well-Being | Współautorka | [🔗 PubMed Central](https://pmc.ncbi.nlm.nih.gov/articles/PMC9540674/) |
+| Tytuł | Czasopismo | Plik lokalny | Link online |
+|-------|------------|--------------|-------------|
+| Adenovirus 36 Infection in People Living with HIV — Seroprevalence and Cardiovascular Risk | Viruses | [📄 XML](publikacje/PMC9412590-adenovirus36-hiv-cardiovascular.xml) | [🔗 PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9412590/) |
+| Frailty and prefrailty in people living with HIV, focus on women | Int J STD & AIDS | — | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM5f5c496b80354178a1ba61ce90d32a22/) |
+| U=U Statement in Women. Are we there Yet? | Acta Scientific | — | [🔗 Acta](https://actascientific.com/ASWH/ASWH-04-0374.php) |
+| Delayed HIV diagnosis during COVID-19 pandemic in Poland | HIV Medicine | [📄 XML](publikacje/PMC9877591-delayed-hiv-covid.xml) | [🔗 PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9877591/) |
+| Enhancing well-being in people with HIV/AIDS: if-then plans intervention | Applied Psychology | [📄 XML](publikacje/PMC9540674-wellbeing-hiv.xml) | [🔗 PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9540674/) |
 
 ### 2021
 
-| Tytuł | Czasopismo | Rola | Link |
-|-------|------------|------|------|
-| ART in pregnant women living with HIV | The Lancet | Współautorka | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM7556557ff630464a851b23ee3ae5478b/) |
-| The newest and classic biomarkers of sepsis in HIV-infected adult patients | HIV and AIDS Review | Współautorka | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM564e2cb7e20b4bd0b62084654e24ba23/) |
-| Children were less frequently infected with SARS-CoV-2 than adults during 2020 COVID-19 pandemic in Warsaw, Poland | European Journal of Clinical Microbiology & Infectious Diseases | Współautorka | [🔗 PPM WUM](https://ppm.wum.edu.pl/info/article/WUMf623511536e94d6e9a905bc745c85ffd/) |
+| Tytuł | Czasopismo | Plik lokalny | Link online |
+|-------|------------|--------------|-------------|
+| ART in pregnant women living with HIV | The Lancet | — | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM7556557ff630464a851b23ee3ae5478b/) |
+| The newest and classic biomarkers of sepsis in HIV-infected adults | HIV and AIDS Review | — | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM564e2cb7e20b4bd0b62084654e24ba23/) |
+| Children were less frequently infected with SARS-CoV-2 than adults (Warsaw 2020) | Eur J Clin Microbiol | [📄 XML](publikacje/PMC7520378-children-covid-warsaw.xml) | [🔗 PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC7520378/) |
+
+### 2020
+
+| Tytuł | Czasopismo | Plik lokalny | Link online |
+|-------|------------|--------------|-------------|
+| Risk Factors for Recurrent Erysipelas and Cellulitis of the Lower Limb | Medicina | [📄 XML](publikacje/PMC7229562-erysipelas-cellulitis-risk.xml) | [🔗 PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC7229562/) |
+
+### 2018
+
+| Tytuł | Czasopismo | Plik lokalny | Link online |
+|-------|------------|--------------|-------------|
+| Heparin-Binding Protein and D-dimers in Spontaneous Bacterial Peritonitis | Medicina | [📄 XML](publikacje/PMC6186319-heparin-binding-peritonitis.xml) | [🔗 PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC6186319/) |
 
 ### 2017
 
-| Tytuł | Czasopismo | Rola | Link |
-|-------|------------|------|------|
-| Odmiedniczkowe zapalenie nerek | Rozdział w "Choroby zakaźne i pasożytnicze" | Współautorka | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM6cab8db3c50a4581a5fb85a834690f0b/) |
+| Tytuł | Czasopismo | Plik lokalny | Link online |
+|-------|------------|--------------|-------------|
+| Meeting the WHO 90% target: ART treatment efficacy in Poland | AIDS Res Ther | [📄 XML](publikacje/PMC5577695-art-treatment-efficacy-poland.xml) | [🔗 PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC5577695/) |
+| Odmiedniczkowe zapalenie nerek | Rozdział książki | — | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM6cab8db3c50a4581a5fb85a834690f0b/) |
 
 ### 2015
 
-| Tytuł | Czasopismo | Rola | Link |
-|-------|------------|------|------|
-| Obrzezanie mężczyzn i kobiet | Forum Medycyny Rodzinnej | Współautorka | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM7b991e587f0843308e6ce663c68d329a/) |
+| Tytuł | Czasopismo | Plik lokalny | Link online |
+|-------|------------|--------------|-------------|
+| Obrzezanie mężczyzn i kobiet | Forum Medycyny Rodzinnej | — | [🔗 PPM WUM](https://ppm.edu.pl/info/article/WUM7b991e587f0843308e6ce663c68d329a/) |
 
 ---
 
 ## Pobrane pliki lokalne
 
 Folder: `publikacje/`
+
+### PDF (BIP WUM - doktorat)
 
 | Plik | Rozmiar | Opis |
 |------|---------|------|
@@ -91,18 +107,32 @@ Folder: `publikacje/`
 | `recenzja-inglot.pdf` | 542 KB | Recenzja prof. Inglot |
 | `zawiadomienie-obrona.pdf` | 18.9 MB | Zawiadomienie o publicznej obronie |
 
+### XML (PMC E-utilities API - pełne teksty artykułów)
+
+| Plik | Rozmiar | Rok | Tematyka |
+|------|---------|-----|----------|
+| `PMC10148112-late-hiv-migrants.xml` | 87 KB | 2023 | Późna diagnoza HIV u migrantek |
+| `PMC9877591-delayed-hiv-covid.xml` | 14 KB | 2022 | Opóźniona diagnoza HIV w COVID |
+| `PMC9540674-wellbeing-hiv.xml` | 181 KB | 2022 | Interwencja psychologiczna HIV |
+| `PMC9412590-adenovirus36-hiv-cardiovascular.xml` | 105 KB | 2022 | Adenovirus 36 i ryzyko sercowe |
+| `PMC7520378-children-covid-warsaw.xml` | 74 KB | 2021 | Dzieci i COVID w Warszawie |
+| `PMC7229562-erysipelas-cellulitis-risk.xml` | 52 KB | 2020 | Róża i cellulitis - czynniki ryzyka |
+| `PMC6186319-heparin-binding-peritonitis.xml` | 66 KB | 2018 | Diagnostyka zapalenia otrzewnej |
+| `PMC5577695-art-treatment-efficacy-poland.xml` | 151 KB | 2017 | Skuteczność ART w Polsce |
+
 ---
 
 ## Podsumowanie profilu naukowego
 
 **Główne obszary badawcze:**
-- HIV/AIDS - opieka, diagnostyka, leczenie
+- HIV/AIDS - opieka, diagnostyka, leczenie, ART
 - Zdrowie kobiet z HIV (ciąża, HPV, frailty)
 - Bariery w dostępie do opieki zdrowotnej (migranci)
-- Choroby oportunistyczne
+- Choroby oportunistyczne i infekcyjne
 - COVID-19 i HIV
-- Edukacja zdrowotna (wiedza o HIV wśród młodzieży)
+- Edukacja zdrowotna
 - Interwencje psychologiczne (dobrostan osób z HIV)
+- Diagnostyka infekcji (biomarkery, peritonitis)
 
 **Współpraca międzynarodowa:**
 - Europejskie projekty badawcze (WAVE Migrant Women Working Group)
@@ -113,3 +143,9 @@ Folder: `publikacje/`
 - Badania kohortowe/retrospektywne
 - Badania interwencyjne
 - Ankiety europejskie
+- Badania epidemiologiczne
+
+**Statystyki:**
+- 1 rozprawa doktorska
+- 8 artykułów w PubMed Central (pełne teksty pobrane)
+- ~6 dodatkowych artykułów w innych czasopismach
