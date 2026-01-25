@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .sortable-ghost { opacity: 0.4; }
+        .sortable-drag { opacity: 0.9; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <div x-data="pmApp()" x-init="init()" x-cloak class="container mx-auto px-4 py-6">
+        <!-- Header -->
+        <header class="mb-6">
+            <h1 class="text-2xl font-bold text-white mb-4">PM Dashboard</h1>
+
+            <!-- Tabs -->
+            <div class="flex gap-2 mb-4">
+                <button @click="activeTab = 'tasks'"
+                    :class="activeTab === 'tasks' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'"
+                    class="px-4 py-2 rounded-lg font-medium transition">
+                    Tasks
+                </button>
+                <button @click="activeTab = 'people'"
+                    :class="activeTab === 'people' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'"
+                    class="px-4 py-2 rounded-lg font-medium transition">
+                    People
+                </button>
+                <button @click="activeTab = 'projects'"
+                    :class="activeTab === 'projects' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'"
+                    class="px-4 py-2 rounded-lg font-medium transition">
+                    Projects
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex gap-4 flex-wrap">
+                <template x-if="activeTab === 'tasks'">
+                    <div class="flex gap-4">
+                        <select x-model="filters.person" class="bg-gray-700 rounded px-3 py-2 text-sm">
+                            <option value="">All People</option>
+                            <template x-for="person in people" :key="person.id">
+                                <option :value="person.name" x-text="person.name"></option>
+                            </template>
+                        </select>
+                        <select x-model="filters.project" class="bg-gray-700 rounded px-3 py-2 text-sm">
+                            <option value="">All Projects</option>
+                            <template x-for="project in projects" :key="project.id">
+                                <option :value="project.name" x-text="project.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                </template>
+            </div>
+        </header>
+
+        <!-- Loading -->
+        <div x-show="loading" class="text-center py-12">
+            <div class="text-gray-400">Loading...</div>
+        </div>
+
+        <!-- Tasks Kanban -->
+        <div x-show="!loading && activeTab === 'tasks'" class="grid grid-cols-4 gap-4">
+            <template x-for="status in taskStatuses" :key="status">
+                <div class="bg-gray-800 rounded-lg p-4">
+                    <h2 class="font-semibold mb-3 text-gray-300" x-text="status"></h2>
+                    <div :id="'tasks-' + status.toLowerCase().replace(' ', '-')"
+                         :data-status="status"
+                         class="space-y-2 min-h-[200px] task-column">
+                        <template x-for="task in filteredTasks.filter(t => t.status === status)" :key="task.id">
+                            <div :data-id="task.id"
+                                 class="bg-gray-700 rounded-lg p-3 cursor-move hover:bg-gray-600 transition task-card"
+                                 @click="copyPath(task.path)">
+                                <div class="font-medium text-sm" x-text="task.name"></div>
+                                <div class="text-xs text-gray-400 mt-1" x-show="getPersonFromTask(task)">
+                                    <span x-text="getPersonFromTask(task)"></span>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1" x-show="getProjectFromTask(task)">
+                                    <span x-text="getProjectFromTask(task)"></span>
+                                </div>
+                                <div class="flex gap-1 mt-2 flex-wrap">
+                                    <span x-show="task.metadata.priority === 'High'"
+                                          class="text-xs bg-red-900 text-red-200 px-2 py-0.5 rounded">High</span>
+                                    <span x-show="task.metadata.priority === 'Medium'"
+                                          class="text-xs bg-yellow-900 text-yellow-200 px-2 py-0.5 rounded">Medium</span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- People Pipeline -->
+        <div x-show="!loading && activeTab === 'people'" class="grid grid-cols-4 gap-4">
+            <template x-for="role in personRoles" :key="role">
+                <div class="bg-gray-800 rounded-lg p-4">
+                    <h2 class="font-semibold mb-3 text-gray-300" x-text="role"></h2>
+                    <div class="space-y-2 min-h-[200px]">
+                        <template x-for="person in people.filter(p => p.metadata.role === role)" :key="person.id">
+                            <div class="bg-gray-700 rounded-lg p-3 hover:bg-gray-600 transition cursor-pointer"
+                                 @click="copyPath(person.path)">
+                                <div class="font-medium text-sm" x-text="person.name"></div>
+                                <div class="text-xs text-gray-400 mt-1" x-show="person.metadata.company"
+                                     x-text="person.metadata.company"></div>
+                                <div class="flex gap-1 mt-2 flex-wrap">
+                                    <template x-for="tag in (person.metadata.tags || []).slice(0, 2)" :key="tag">
+                                        <span class="text-xs bg-gray-600 px-2 py-0.5 rounded" x-text="tag"></span>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Projects List -->
+        <div x-show="!loading && activeTab === 'projects'" class="grid grid-cols-4 gap-4">
+            <template x-for="status in projectStatuses" :key="status">
+                <div class="bg-gray-800 rounded-lg p-4">
+                    <h2 class="font-semibold mb-3 text-gray-300" x-text="status"></h2>
+                    <div :id="'projects-' + status.toLowerCase().replace(' ', '-')"
+                         :data-status="status"
+                         class="space-y-2 min-h-[200px] project-column">
+                        <template x-for="project in projects.filter(p => p.status === status)" :key="project.id">
+                            <div :data-id="project.id"
+                                 class="bg-gray-700 rounded-lg p-3 cursor-move hover:bg-gray-600 transition project-card"
+                                 @click="copyPath(project.path)">
+                                <div class="font-medium text-sm" x-text="project.name"></div>
+                                <div class="text-xs text-gray-400 mt-1" x-show="getPersonFromProject(project)">
+                                    <span x-text="getPersonFromProject(project)"></span>
+                                </div>
+                                <div class="flex gap-1 mt-2 flex-wrap">
+                                    <span x-show="project.metadata.priority === 'High'"
+                                          class="text-xs bg-red-900 text-red-200 px-2 py-0.5 rounded">High</span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Toast notification -->
+        <div x-show="toast.show"
+             x-transition
+             class="fixed bottom-4 right-4 bg-gray-700 text-white px-4 py-2 rounded-lg shadow-lg">
+            <span x-text="toast.message"></span>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
