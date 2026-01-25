@@ -18,10 +18,10 @@ import uvicorn
 # Paths
 SCRIPT_DIR = Path(__file__).parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent.parent
-STRATEGY_DIR = PROJECT_ROOT / "strategy"
-PEOPLE_DIR = STRATEGY_DIR / "people"
-PROJECTS_DIR = STRATEGY_DIR / "projects"
-TASKS_DIR = STRATEGY_DIR / "pm-tasks"
+PM_DIR = PROJECT_ROOT / "pm"
+PEOPLE_DIR = PM_DIR / "people"
+PROJECTS_DIR = PM_DIR / "projects"
+TASKS_DIR = PM_DIR / "tasks"
 UI_DIR = SCRIPT_DIR / "ui"
 
 app = FastAPI(title="PM Dashboard API")
@@ -162,6 +162,80 @@ def update_person_status(person_id: str, update: StatusUpdate):
                 raise HTTPException(status_code=500, detail="Failed to update file")
 
     raise HTTPException(status_code=404, detail=f"Person not found: {person_id}")
+
+# Folder and file browsing
+@app.get("/api/folder")
+def list_folder(path: str):
+    """List files in a folder."""
+    folder_path = PROJECT_ROOT / path
+
+    if not folder_path.exists():
+        raise HTTPException(status_code=404, detail=f"Folder not found: {path}")
+
+    if not folder_path.is_dir():
+        raise HTTPException(status_code=400, detail=f"Not a directory: {path}")
+
+    # Security: ensure path is within project root
+    try:
+        folder_path.resolve().relative_to(PROJECT_ROOT.resolve())
+    except ValueError:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    files = []
+    for item in sorted(folder_path.iterdir()):
+        if item.name.startswith('.'):
+            continue
+        files.append({
+            "name": item.name,
+            "path": str(item.relative_to(PROJECT_ROOT)),
+            "is_dir": item.is_dir(),
+            "size": item.stat().st_size if item.is_file() else None
+        })
+
+    return {"path": path, "files": files}
+
+@app.get("/api/file")
+def read_file(path: str):
+    """Read content of a markdown file."""
+    file_path = PROJECT_ROOT / path
+
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail=f"File not found: {path}")
+
+    if not file_path.is_file():
+        raise HTTPException(status_code=400, detail=f"Not a file: {path}")
+
+    # Security: ensure path is within project root
+    try:
+        file_path.resolve().relative_to(PROJECT_ROOT.resolve())
+    except ValueError:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    # Only allow markdown files
+    if file_path.suffix.lower() not in ['.md', '.txt', '.yaml', '.yml', '.json', '.csv']:
+        raise HTTPException(status_code=400, detail="Only text files allowed")
+
+    try:
+        content = file_path.read_text(encoding='utf-8')
+
+        # Try to parse frontmatter if markdown
+        metadata = {}
+        if file_path.suffix.lower() == '.md':
+            try:
+                post = frontmatter.load(file_path)
+                metadata = dict(post.metadata)
+                content = post.content
+            except:
+                pass
+
+        return {
+            "path": path,
+            "name": file_path.name,
+            "content": content,
+            "metadata": metadata
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading file: {e}")
 
 # Serve static files
 @app.get("/")

@@ -12,20 +12,21 @@ venv/bin/pip install -r .cursor/skills/pm/requirements.txt
 venv/bin/python .cursor/skills/pm/server.py
 ```
 
-Otwórz: **http://localhost:8787**
+**Dashboard:** http://localhost:8787
 
 ## Struktura danych
 
 ```
-strategy/
-├── people/          # Osoby (klienci, partnerzy, leady, network)
-├── projects/        # Projekty
-└── pm-tasks/        # Zadania (Kanban)
+pm/
+├── people/      # Osoby (klienci, partnerzy, leady, network)
+├── projects/    # Projekty (klienckie i wewnętrzne)
+├── tasks/       # Zadania (Kanban)
+└── README.md    # Pełna dokumentacja
 ```
 
 ## Schemas
 
-### Person (`strategy/people/Person - {Nazwa}.md`)
+### Person (`pm/people/Person - {Nazwa}.md`)
 
 ```yaml
 ---
@@ -36,40 +37,64 @@ company: "nazwa firmy"
 date-created: 2026-01-25
 tags: []
 ---
+
+# Nazwa
+
+## Why this matters
+Dlaczego ta relacja jest ważna.
+
+## Context
+Kontekst, historia.
 ```
 
 **Role:**
 - `Client` — płacący klient
-- `Partner` — współpraca, referrale (np. Rudy)
+- `Partner` — współpraca, referrale
 - `Lead` — potencjalny klient w rozmowach
 - `Network` — kontakt, może kiedyś
 
-### Project (`strategy/projects/Project - {Nazwa}.md`)
+### Project (`pm/projects/Project - {Nazwa}.md`)
 
 ```yaml
 ---
 type: Project
 status: Backlog | Active | On Hold | Done
-person: "[[Person - X]]"  # opcjonalne
+person: "[[Person - X]]"           # opcjonalne
 priority: High | Medium | Low
 date-created: 2026-01-25
 tags: []
+folders:                           # foldery z artefaktami
+  - tasks/2026-01-XX-nazwa
 ---
+
+# Nazwa Projektu
+
+## Why this matters
+Dlaczego ten projekt jest ważny.
+
+## Cel
+Co chcemy osiągnąć.
+
+## Deliverables
+- Deliverable 1
+- Deliverable 2
 ```
 
-### Task (`strategy/pm-tasks/Task - {Nazwa}.md`)
+### Task (`pm/tasks/Task - {Nazwa}.md`)
 
 ```yaml
 ---
 type: Task
 status: Todo | In Progress | Blocked | Done
-project: "[[Project - X]]"  # opcjonalne
-person: "[[Person - X]]"    # opcjonalne
+project: "[[Project - X]]"         # opcjonalne
+person: "[[Person - X]]"           # opcjonalne
 priority: High | Medium | Low
 date-created: 2026-01-25
-due: 2026-01-28             # opcjonalne
+due: 2026-01-28                    # opcjonalne
 tags: []
 ---
+
+Opis zadania.
 ```
 
 ## UI Features
@@ -77,45 +102,57 @@ tags: []
 ### Widoki
 
 1. **Tasks (Kanban)** — 4 kolumny: Todo, In Progress, Blocked, Done
-2. **People (Pipeline)** — 4 kolumny: Lead, Partner, Network, Client
-3. **Projects** — 4 kolumny: Backlog, Active, On Hold, Done
+2. **Projects** — 4 kolumny: Backlog, Active, On Hold, Done
+3. **People (Pipeline)** — 4 kolumny: Lead, Partner, Network, Client
 
-### Interakcje
+### Nawigacja
 
-- **Drag & drop** — przeciągnij kartę do innej kolumny, status w pliku się zaktualizuje
-- **Klik** — kopiuje ścieżkę do pliku (do otwarcia w Cursor)
-- **Filtry** — w widoku Tasks: by person, by project
+- **Klik w kartę** → pełnoekranowy widok szczegółów
+- **Widok szczegółów** → lewa strona: opis (renderowany markdown), prawa: foldery i pliki
+- **Klik w folder** → lista plików
+- **Klik w plik** → podgląd z renderowanym markdown
+- **Copy Path** → kopiuje ścieżkę do schowka
+- **Back** → powrót do poprzedniego widoku
 
-## Workflow
+### Drag & Drop
 
-1. Uruchom serwer: `venv/bin/python .cursor/skills/pm/server.py`
-2. Otwórz http://localhost:8787 w przeglądarce Cursor
-3. Przeciągaj karty między kolumnami
-4. Kliknij kartę → skopiowana ścieżka → otwórz w Cursor do edycji treści
+- Przeciągnij kartę między kolumnami → status w pliku się aktualizuje
 
-## Dodawanie nowych elementów
+### Filtry (Tasks)
 
-Stwórz nowy plik markdown z odpowiednim frontmatterem:
+- Filtruj po osobie
+- Filtruj po projekcie
 
-```bash
-# Nowa osoba
-touch "strategy/people/Person - Jan Kowalski.md"
+## Integracja z tasks/
 
-# Nowy projekt
-touch "strategy/projects/Project - Nowy Projekt.md"
+Projekty mogą mieć pole `folders:` wskazujące na foldery robocze:
 
-# Nowy task
-touch "strategy/pm-tasks/Task - Zrób coś.md"
+```yaml
+folders:
+  - tasks/2026-01-22-porter
+  - tasks/2026-01-19-strategia
 ```
 
-Lub poproś agenta o stworzenie.
+Pliki z tych folderów są przeglądane bezpośrednio w dashboardzie.
 
 ## API
 
-- `GET /api/people` — lista osób
-- `GET /api/projects` — lista projektów
-- `GET /api/tasks` — lista tasków
-- `GET /api/all` — wszystko
-- `PATCH /api/tasks/{id}` — update statusu taska
-- `PATCH /api/projects/{id}` — update statusu projektu
-- `PATCH /api/people/{id}` — update statusu osoby
+| Endpoint | Metoda | Opis |
+|----------|--------|------|
+| `/api/all` | GET | Wszystkie encje |
+| `/api/people` | GET | Lista osób |
+| `/api/projects` | GET | Lista projektów |
+| `/api/tasks` | GET | Lista tasków |
+| `/api/tasks/{id}` | PATCH | Zmiana statusu taska |
+| `/api/projects/{id}` | PATCH | Zmiana statusu projektu |
+| `/api/people/{id}` | PATCH | Zmiana statusu osoby |
+| `/api/folder?path=X` | GET | Lista plików w folderze |
+| `/api/file?path=X` | GET | Zawartość pliku |
+
+## Komenda
+
+```
+@pm
+```
+
+Uruchamia serwer i informuje o dostępności dashboardu.

@@ -7,6 +7,9 @@ date-created: 2026-01-25
 tags:
   - discovery
   - healthcare
+folders:
+  - tasks/2026-01-18-dagny
+  - tasks/2026-01-15-sepsis-datasets
 ---
 
 # Dagny Discovery

@@ -3,10 +3,20 @@ function pmApp() {
         loading: true,
         activeTab: 'tasks',
 
+        // Data
         people: [],
         projects: [],
         tasks: [],
 
+        // View state
+        view: 'board', // 'board', 'detail', 'file'
+        currentEntity: null,
+        currentFolder: null,
+        currentFile: null,
+        folderFiles: [],
+        loadingFolder: false,
+
+        // Constants
         taskStatuses: ['Todo', 'In Progress', 'Blocked', 'Done'],
         projectStatuses: ['Backlog', 'Active', 'On Hold', 'Done'],
         personRoles: ['Lead', 'Partner', 'Network', 'Client'],
@@ -34,6 +44,15 @@ function pmApp() {
                 this.$nextTick(() => {
                     this.initSortable();
                 });
+            });
+
+            // Re-init sortable when returning to board
+            this.$watch('view', (newView) => {
+                if (newView === 'board') {
+                    this.$nextTick(() => {
+                        this.initSortable();
+                    });
+                }
             });
         },
 
@@ -72,6 +91,85 @@ function pmApp() {
             return result;
         },
 
+        // Navigation
+        goHome() {
+            this.view = 'board';
+            this.currentEntity = null;
+            this.currentFolder = null;
+            this.currentFile = null;
+            this.folderFiles = [];
+        },
+
+        goBack() {
+            if (this.view === 'file') {
+                this.view = 'detail';
+                this.currentFile = null;
+            } else if (this.view === 'detail') {
+                this.goHome();
+            }
+        },
+
+        openEntity(entity) {
+            this.currentEntity = entity;
+            this.currentFolder = null;
+            this.currentFile = null;
+            this.folderFiles = [];
+            this.view = 'detail';
+
+            // Auto-load first folder if available
+            if (entity.metadata?.folders?.length) {
+                this.loadFolder(entity.metadata.folders[0]);
+            }
+        },
+
+        openLinkedPerson(personLink) {
+            const name = this.extractName(personLink);
+            if (!name) return;
+
+            const person = this.people.find(p => p.name === name || personLink.includes(p.name));
+            if (person) {
+                this.openEntity(person);
+            }
+        },
+
+        // Folder and file operations
+        async loadFolder(folderPath) {
+            this.currentFolder = folderPath;
+            this.folderFiles = [];
+            this.loadingFolder = true;
+
+            try {
+                const response = await fetch(`/api/folder?path=${encodeURIComponent(folderPath)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    this.folderFiles = data.files;
+                } else {
+                    this.showToast('Failed to load folder');
+                }
+            } catch (error) {
+                console.error('Failed to load folder:', error);
+                this.showToast('Failed to load folder');
+            }
+
+            this.loadingFolder = false;
+        },
+
+        async loadFile(file) {
+            try {
+                const response = await fetch(`/api/file?path=${encodeURIComponent(file.path)}`);
+                if (response.ok) {
+                    this.currentFile = await response.json();
+                    this.view = 'file';
+                } else {
+                    this.showToast('Failed to load file');
+                }
+            } catch (error) {
+                console.error('Failed to load file:', error);
+                this.showToast('Failed to load file');
+            }
+        },
+
+        // Helpers
         getPersonFromTask(task) {
             const person = task.metadata.person;
             if (!person) return null;
@@ -102,6 +200,25 @@ function pmApp() {
             return person;
         },
 
+        extractName(link) {
+            if (!link) return null;
+            const match = link.match(/\[\[([^\]]+)\]\]/);
+            if (match) {
+                return match[1].replace(/^(Person|Project|Task)\s*-\s*/, '');
+            }
+            return link;
+        },
+
+        renderMarkdown(content) {
+            if (!content) return '<p class="text-gray-500">No content</p>';
+            try {
+                return marked.parse(content);
+            } catch (e) {
+                return `<pre>${content}</pre>`;
+            }
+        },
+
+        // Sortable
         initSortable() {
             // Destroy existing instances
             this.sortableInstances.forEach(s => s.destroy());
@@ -153,7 +270,6 @@ function pmApp() {
                 });
 
                 if (response.ok) {
-                    // Update local state
                     const task = this.tasks.find(t => t.id === taskId);
                     if (task) {
                         task.status = newStatus;
@@ -161,7 +277,7 @@ function pmApp() {
                     this.showToast(`Task moved to ${newStatus}`);
                 } else {
                     this.showToast('Failed to update task');
-                    await this.loadData(); // Reload to sync
+                    await this.loadData();
                 }
             } catch (error) {
                 console.error('Failed to update task:', error);
@@ -196,6 +312,7 @@ function pmApp() {
         },
 
         copyPath(path) {
+            if (!path) return;
             navigator.clipboard.writeText(path).then(() => {
                 this.showToast(`Copied: ${path}`);
             }).catch(() => {

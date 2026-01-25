@@ -1,7 +1,7 @@
 ---
 type: Task
 status: Todo
-project: ""
+project: "[[Project - Gumis Discovery]]"
 person: "[[Person - Gumis]]"
 priority: High
 date-created: 2026-01-25
