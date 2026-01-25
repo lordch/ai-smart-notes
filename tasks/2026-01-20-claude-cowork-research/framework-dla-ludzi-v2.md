@@ -172,6 +172,35 @@ Ta sama praca. Inny rozkład wysiłku. Inny poziom stresu.
 
 ---
 
+### Czat jako miejsce pracy
+
+Zanim przejdziemy dalej - ważne wyjaśnienie.
+
+Czat nie jest "złym trybem" którego unikamy. **Czat jest miejscem pracy:**
+
+- **Eksternalizacja** - wyciągasz intencję z głowy do słów
+- **Sterowanie** - dajesz kierunek, koregujesz, doprecyzowujesz
+- **Krystalizacja** - odkrywasz czego właściwie chcesz
+- **Weryfikacja** - sprawdzasz, dopytujeszz, upewniasz się
+- **Iteracja** - poprawiasz, ulepszasz
+
+Tu dzieje się prawdziwa praca. Tu eksternalizujesz swoją wiedzę i intencje.
+
+**Problem nie jest w czacie.** Problem jest w tym, że **kontekst puchnie**:
+- Historia rośnie z każdą wiadomością
+- Wcześniejsze ustalenia "toną"
+- Ślepe uliczki zostają w pamięci
+
+**Rozwiązanie: checkpointing.** Pracujesz w czacie → zapisujesz wynik do pliku → nowa sesja z czystym kontekstem.
+
+Wyobraź sobie:
+
+> "Czat to kokpit. Siedzisz w nim i sterujesz. Tylko co jakiś czas 'czyścisz kokpit' żeby znowu widzieć przez szybę."
+
+Czat + checkpointing = najlepsze z obu światów. Kontrola + czysty kontekst.
+
+---
+
 ## Część III: Cztery Problemy Kontekstu
 
 ### Meta-framing
@@ -253,10 +282,28 @@ Dostajesz coś. Technicznie to jest "raport o konkurencji". Ale nie to, czego po
 
 **Jak naprawiać:**
 
-- Definiuj precyzyjnie: co ma powstać, z czego, jakie zasady, jak ma wyglądać
-- Pokaż przykład: "format jak ten raport"
-- Steering przed wykonaniem: weryfikuj plan, nie tylko wynik
-- Mniejsze kawałki: łatwiej sprawdzić 5 stron niż 50
+Jest spectrum formułowania zadania:
+
+```
+TY SPECYFIKUJESZ ◄────────────────────► AGENT FORMUŁUJE
+PRECYZYJNIE                              Z KONTEKSTU
+```
+
+**Możesz być bardzo precyzyjny** (gdy wiesz dokładnie czego chcesz):
+- "Zrób raport PDF, 10 stron, z wykresami, format jak poprzedni"
+
+**Możesz dać agentowi kontekst i poprosić o sformułowanie** (gdy masz dużo materiałów):
+- "Zobacz poprzednie raporty w /reports. Zaproponuj strukturę. Dopytaj mnie o to czego ci brakuje"
+
+**Możesz mieszać:**
+- "Chcę analizę konkurencji dla zarządu. Zobacz jak wyglądały poprzednie. Powiedz jak rozumiesz zadanie"
+
+**Gdzie jesteś na spectrum zależy od:**
+- Ile kontekstu agent ma (pliki, przykłady, poprzednie prace)
+- Jak dobrze wiesz czego chcesz
+- Czy to powtarzalne zadanie
+
+**Kluczowe:** Przerzuć część pracy formułowania na agenta gdy ma dobry kontekst. Twoja rola: korekta, nie pełna specyfikacja.
 
 ---
 
@@ -446,7 +493,7 @@ Definiowanie kierunku przed wykonaniem. Korekta kierunku w trakcie.
 
 **Jak to wygląda praktycznie:**
 
-**Przed:** Precyzyjne zadanie (WIRE - What, Input, Rules, Examples)
+**Przed:** Sformułowane zadanie - przez ciebie precyzyjnie, lub przez agenta z kontekstu, lub mix.
 
 **W trakcie:** Możesz interweniować:
 - "Skup się bardziej na aspekcie finansowym"
@@ -656,22 +703,39 @@ Zanim zaczniesz pisać raport, zbierasz wszystkie dokumenty na biurku. To jest t
 
 **Co się dzieje:**
 
-Definiujesz co AI ma zrobić. Precyzyjnie.
+Określasz co AI ma zrobić. Ale nie musisz wszystkiego formułować sam.
 
-**Framework WIRE:**
+**Spectrum formułowania:**
 
-| Element | Pytanie | Przykład |
-|---------|---------|----------|
-| **W**hat | Co ma powstać? | "Raport PDF, 10 stron, z wykresami" |
-| **I**nput | Z czego? | "Pliki w folderze /data/sales-q4/" |
-| **R**ules | Jakie zasady? | "Tylko top 10 produktów, format jak Q3" |
-| **E**xamples | Jak ma wyglądać? | "Zobacz /reports/q3-report.pdf" |
+```
+TY SPECYFIKUJESZ ◄────────────────────► AGENT FORMUŁUJE
+PRECYZYJNIE                              Z KONTEKSTU
+```
 
-**Wyobraź sobie różnicę:**
+**Co agent może wiedzieć sam (z kontekstu):**
+- Struktura poprzednich raportów (jeśli ma dostęp do plików)
+- Styl komunikacji (jeśli widzi przykłady)
+- Specyfika projektu (jeśli ma brief/dokumenty)
 
-❌ "Przeanalizuj dane sprzedażowe"
+**Co musisz powiedzieć ty:**
+- Cel (co chcesz osiągnąć)
+- Dla kogo (odbiorca)
+- Priorytety (co jest ważne)
 
-✅ "Przeanalizuj pliki CSV w /sales-q4 (I). Znajdź top 10 produktów po revenue. Stwórz raport PDF z wykresami trendów (W). Format jak /reports/q3-report.pdf (E). Max 10 stron, dla zarządu - bez żargonu (R)."
+**Co agent może sformułować za ciebie:**
+- "Przejrzyj kontekst i powiedz jak rozumiesz zadanie"
+- "Dopytaj mnie o to, czego ci brakuje"
+- "Zaproponuj strukturę na podstawie poprzednich raportów"
+
+**Przykłady na spectrum:**
+
+❌ Za mało: "Przeanalizuj dane sprzedażowe"
+
+✅ Ty specyfikujesz: "Przeanalizuj pliki CSV w /sales-q4. Top 10 produktów po revenue. Raport PDF, format jak q3-report.pdf"
+
+✅ Agent formułuje: "Mam zrobić analizę Q4. Pliki w /data, poprzednie raporty w /reports. Powiedz jak rozumiesz zadanie i dopytaj mnie"
+
+✅ Mix: "Chcę raport Q4 dla zarządu. Zaproponuj strukturę na podstawie poprzedniego"
 
 ---
 
@@ -681,14 +745,19 @@ Definiujesz co AI ma zrobić. Precyzyjnie.
 
 Upewniasz się że AI rozumie zadanie tak jak ty.
 
+**Alignment to droga dwukierunkowa:**
+
+1. Ty możesz specyfikować → AI potwierdza rozumienie
+2. AI może formułować z kontekstu → ty koregujesz
+3. Mix: ty dajesz kierunek, AI doprecyzowuje, ty zatwierdzasz
+
 **Jak to zrobić:**
 
-1. Dajesz zadanie (WIRE)
-2. Mówisz: "Zanim zaczniesz, powiedz jak rozumiesz to zadanie. Jakie masz założenia?"
-3. AI formułuje rozumienie
-4. Sprawdzasz: Czy rozumie cel? Czy założenia OK? Czy użyje właściwych źródeł?
-5. Koregujesz jeśli trzeba
-6. Dopiero potem: "OK, teraz zrób plan"
+1. Dajesz zadanie (precyzyjnie lub prosisz o sformułowanie)
+2. AI formułuje swoje rozumienie: "Rozumiem że mam..., zakładam że..."
+3. Sprawdzasz: Czy rozumie cel? Czy założenia OK? Czy użyje właściwych źródeł?
+4. Koregujesz jeśli trzeba
+5. Dopiero potem: "OK, teraz zrób plan"
 
 **Checkpoint:**
 
@@ -696,7 +765,7 @@ Po alignment możesz zapisać brief jako "kontrakt" na resztę zadania.
 
 **Wyobraź sobie:**
 
-Przekazujesz pracownikowi projekt. Zanim odejdziesz, prosisz żeby powiedział własnymi słowami co ma zrobić. Upewniasz się że się rozumiecie.
+Przekazujesz pracownikowi projekt. Może mu dać szczegółowy brief. Albo może pokazać poprzedni projekt i powiedzieć "zrób podobnie". W obu przypadkach prosisz żeby powiedział własnymi słowami co zrozumiał.
 
 ---
 
@@ -790,7 +859,7 @@ GROMADZENIE KONTEKSTU
         │
    [checkpoint: źródła]
         │
-FORMUŁOWANIE (WIRE)
+FORMUŁOWANIE (ty ↔ agent)
         │
 ALIGNMENT ("jak to rozumiesz?")
         │
@@ -1036,8 +1105,8 @@ Nie musisz wszystkiego naraz. Zacznij od jednej rzeczy:
 
 **Na najbliższe zadanie:**
 
-1. Przed pisaniem do AI - zapisz sobie odpowiedzi na WIRE (co, z czego, jakie zasady, jak ma wyglądać)
-2. Po wpisaniu zadania dodaj: "Zanim zaczniesz, powiedz jak to rozumiesz i jakie masz założenia"
+1. Daj AI kontekst (pliki, przykłady) i cel - nie musisz specyfikować wszystkiego, agent może wyciągnąć z kontekstu
+2. Po wpisaniu zadania dodaj: "Zanim zaczniesz, powiedz jak to rozumiesz i jakie masz założenia. Dopytaj mnie o to czego ci brakuje"
 3. Przed zamknięciem sesji: "Zapisz wynik do pliku X"
 
 Trzy małe zmiany. Jeden raz. Zobacz różnicę.

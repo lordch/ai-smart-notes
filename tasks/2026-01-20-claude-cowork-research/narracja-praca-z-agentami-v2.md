@@ -90,6 +90,33 @@ CHAT MODE ←――――[TUTAJ]――――――→ AUTONOMICZNY AGENT
 
 ---
 
+### Czat jako miejsce pracy
+
+Zanim przejdziemy dalej - ważne rozróżnienie.
+
+Czat nie jest "złym trybem" którego unikamy. Czat jest **miejscem pracy**:
+
+- **Eksternalizacja intencji** - z głowy do słów
+- **Sterowanie** - kierunek, korekty, doprecyzowanie
+- **Krystalizacja** - odkrywanie czego właściwie chcesz
+- **Weryfikacja** - sprawdzanie, dopytywanie
+- **Iteracja** - poprawianie, ulepszanie
+
+Tu dzieje się prawdziwa praca. Tu eksternalizujesz swoją wiedzę, intencje, wymagania.
+
+**Problem nie jest w czacie.** Problem jest w tym, że **kontekst puchnie**:
+- Historia rośnie z każdą wiadomością
+- Wcześniejsze ustalenia "toną"
+- Ślepe uliczki zostają w kontekście
+
+**Dlatego checkpointing.** Pracujesz w czacie → zapisujesz wynik do pliku → nowa sesja z czystym kontekstem.
+
+> "Czat to kokpit. Siedzisz w nim i sterujesz. Tylko co jakiś czas 'czyścisz kokpit' żeby widzieć przez szybę."
+
+Czat + checkpointing = to samo co środek spectrum. Kontrola + czysty kontekst.
+
+---
+
 ## Część III: Cztery Problemy Kontekstu
 
 ### Meta-framing
@@ -159,15 +186,33 @@ Agent optymalizuje pod "wygląda dobrze" bo nie ma innych kryteriów. Generuje c
 
 **Rozwiązania:**
 
-1. **Precyzyjne wymagania upfront (WIRE)**
-   - **W**hat: Co konkretnie ma powstać (format, struktura, długość)
-   - **I**nput: Z czego (jakie źródła, dane)
-   - **R**ules: Jakie zasady (styl, constraints, must-have)
-   - **E**xamples: Jak ma wyglądać (reference, anti-examples)
+1. **Spectrum formułowania zadania**
 
-2. **Steering przed wykonaniem**
-   - Definiujesz jakość na początku, nie poprawiasz na końcu
-   - Agent wie czego oczekujesz zanim zacznie
+   Nie musisz wszystkiego specyfikować sam. Jest spectrum:
+
+   ```
+   TY SPECYFIKUJESZ ◄────────────────────► AGENT FORMUŁUJE
+   PRECYZYJNIE                              Z KONTEKSTU
+   ```
+
+   **Lewy kraniec:** Mówisz dokładnie co, z czego, jakie zasady, jak ma wyglądać.
+
+   **Prawy kraniec:** Dajesz kontekst (pliki, przykłady) i cel. Agent wyciąga szczegóły z kontekstu, formułuje założenia, dopytuje cię.
+
+   **Gdzie jesteś na spectrum zależy od:**
+   - Ile kontekstu agent ma (dużo plików → agent może więcej wyciągnąć)
+   - Jak dobrze wiesz czego chcesz (jasna wizja → specyfikuj; mgliście → niech agent pomoże)
+   - Jak powtarzalne zadanie (pierwszy raz → więcej dialogu; dziesiąty raz → precyzyjna instrukcja)
+
+   **Praktycznie:**
+   - Możesz być bardzo precyzyjny: "Zrób X w formacie Y z plików Z"
+   - Możesz delegować formułowanie: "Przejrzyj ten kontekst, powiedz jak rozumiesz zadanie, dopytaj mnie o to czego ci brakuje"
+   - Możesz mieszać: "Chcę raport o konkurencji. Zobacz poprzednie raporty w /reports i zaproponuj strukturę"
+
+2. **Steering i alignment**
+   - Agent formułuje założenia → ty weryfikujesz i koregujesz
+   - Przerzuć pracę formułowania na agenta gdy ma dobry kontekst
+   - Twoja rola: korekta, nie pełna specyfikacja
 
 3. **Checkpointing dla weryfikacji przyrostowej**
    - Mniejsze kawałki = łatwiej sprawdzić
@@ -297,7 +342,7 @@ Context window ma limit. Nie możesz załadować wszystkiego. Im więcej ładuje
    (faktyczny)  (intencji)   (alignment)   (fizyczny)
        │           │               │           │
        ▼           ▼               ▼           ▼
-   • źródła     • WIRE          • alignment  • checkpoint
+   • źródła     • formułowanie • alignment  • checkpoint
    • transparen • steering      • założenia  • dekompozycja
    • inline     • checkpoint    • checkpoint • progressive
    • separation • planning      • steering   • isolation
@@ -393,7 +438,7 @@ Agent jest **eager** - nie pyta, zakłada. Jeśli czegoś nie powiesz, wypełni 
 Definiowanie kierunku przed wykonaniem. Korekta kierunku w trakcie.
 
 **Jak działa:**
-- Precyzyjne zadanie upfront (WIRE)
+- Sformułowane zadanie (przez ciebie lub agenta z kontekstu)
 - Plan jako checkpoint do weryfikacji
 - Możliwość redirect w trakcie
 - Course correction gdy drift
@@ -550,7 +595,7 @@ Każde złożone zadanie przechodzi przez fazy. Zrozumienie tych faz pozwala na 
 │            [checkpoint]                                         │
 │                    ↓                                            │
 │  2. FORMUŁOWANIE ZADANIA                                        │
-│     └── WIRE: What, Input, Rules, Examples                      │
+│     └── spectrum: ty specyfikujesz ↔ agent formułuje z kontekstu│
 │                    ↓                                            │
 │  3. ALIGNMENT                                                   │
 │     └── agent formułuje założenia, człowiek weryfikuje          │
@@ -606,22 +651,45 @@ Agent research → [CHECKPOINT: lista źródeł] → Nowa sesja do analizy
 ### Faza 2: Formułowanie Zadania
 
 **Co się dzieje:**
-Definiujesz co agent ma zrobić. Precyzyjnie.
+Określasz co agent ma zrobić. Ale nie musisz wszystkiego formułować sam.
 
-**Framework WIRE:**
+**Spectrum formułowania:**
 
-| Element | Pytanie | Przykład |
-|---------|---------|----------|
-| **W**hat | Co ma powstać? | "Raport PDF, 10 stron, z wykresami" |
-| **I**nput | Z czego? | "Pliki w /data/sales-q4/" |
-| **R**ules | Jakie zasady? | "Tylko top 10 produktów, format jak Q3" |
-| **E**xamples | Jak ma wyglądać? | "Zobacz /reports/q3-report.pdf" |
+```
+TY SPECYFIKUJESZ ◄────────────────────► AGENT FORMUŁUJE
+PRECYZYJNIE                              Z KONTEKSTU
+```
 
-**Słaby vs dobry task:**
+**Co agent może wiedzieć sam (z kontekstu):**
+- Struktura poprzednich raportów (jeśli ma dostęp do plików)
+- Styl komunikacji (jeśli widzi przykłady)
+- Specyfika projektu (jeśli ma brief/dokumenty)
 
-❌ "Przeanalizuj dane sprzedażowe"
+**Co musisz powiedzieć ty:**
+- Cel (co chcesz osiągnąć)
+- Dla kogo (odbiorca)
+- Priorytety (co jest ważne)
 
-✅ "Przeanalizuj pliki CSV w /data/sales-q4. Znajdź top 10 produktów po revenue. Stwórz raport PDF z wykresami trendów. Format jak /reports/q3-report.pdf. Zapisz w /reports/q4-analysis.pdf"
+**Co agent może sformułować za ciebie:**
+- "Przejrzyj kontekst i powiedz co rozumiesz"
+- "Dopytaj mnie o to, czego ci brakuje"
+- "Zaproponuj strukturę na podstawie poprzednich raportów"
+- "Sformułuj swoje założenia, zanim zaczniesz"
+
+**Przykłady na spectrum:**
+
+❌ Za mało: "Przeanalizuj dane sprzedażowe"
+
+✅ Ty specyfikujesz: "Przeanalizuj pliki CSV w /data/sales-q4. Top 10 produktów po revenue. Raport PDF z wykresami. Format jak /reports/q3-report.pdf"
+
+✅ Agent formułuje: "Mam zrobić analizę sprzedaży Q4. Zobacz poprzednie raporty w /reports i dane w /data. Powiedz jak rozumiesz zadanie i czego ci brakuje żeby zacząć"
+
+✅ Mix: "Chcę raport o wynikach Q4 dla zarządu. Pliki w /data/sales-q4. Zaproponuj strukturę na podstawie q3-report.pdf"
+
+**Gdzie jesteś na spectrum zależy od:**
+- Ile kontekstu agent ma
+- Jak dobrze wiesz czego chcesz
+- Czy to powtarzalne zadanie
 
 ---
 
@@ -635,15 +703,19 @@ Agent jest **eager**. Nie pyta - zakłada. Jeśli czegoś nie dopowiesz, wypełn
 
 **Jak to robić:**
 
-1. Dajesz zadanie (WIRE)
-2. Mówisz: "Zanim zaczniesz, powiedz swoimi słowami jak rozumiesz to zadanie. Jakie masz założenia?"
-3. Agent formułuje rozumienie
-4. Weryfikujesz:
+1. Dajesz zadanie (precyzyjnie lub z prośbą o sformułowanie z kontekstu)
+2. Agent formułuje swoje rozumienie: "Rozumiem że mam..., zakładam że..."
+3. Weryfikujesz:
    - Czy rozumie cel?
    - Czy założenia są OK?
    - Czy użyje właściwych źródeł?
-5. Koregujesz jeśli trzeba
-6. Dopiero potem: "OK, teraz zrób plan"
+4. Koregujesz jeśli trzeba
+5. Dopiero potem: "OK, teraz zrób plan"
+
+**Alignment to droga dwukierunkowa:**
+- Ty możesz specyfikować → agent potwierdza
+- Agent może formułować z kontekstu → ty koregujesz
+- Albo mix: ty dajesz kierunek, agent doprecyzowuje, ty zatwierdzasz
 
 **Checkpoint:**
 Po alignment - zapisz brief/task jako artefakt. To jest "kontrakt" na resztę zadania.
