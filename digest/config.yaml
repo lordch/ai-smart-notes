@@ -1,0 +1,87 @@
+# AI Digest Configuration
+# Main settings for the digest system
+
+settings:
+  search_budget: 15          # Max web searches per run
+  cache_hours: 6             # How long to cache fetches
+  report_dir: digest/reports
+  default_priority: medium
+
+tier_schedule:
+  tier_1_daily:
+    description: "Always fetch, highest signal"
+    budget: 8
+    sources:
+      # People (RSS)
+      - people.mollick
+      - people.willison
+      - people.nate-jones
+      - people.torres
+      # News
+      - news.arstechnica
+      - news.techcrunch
+    websearch:
+      # For sources without RSS
+      - query: "from:@karpathy"
+        source: people.karpathy
+      - query: "from:@emollick"
+        source: people.mollick
+
+  tier_2_rotating:
+    description: "Rotate through week"
+    budget: 6
+    schedule:
+      monday:
+        - topics.context-engineering
+        - topics.ai-agents
+        - podcasts.latent-space
+      tuesday:
+        - topics.future-of-work
+        - topics.legal-ai
+        - podcasts.vanishing-gradients
+      wednesday:
+        - topics.ai-slop
+        - topics.product-discovery
+        - podcasts.ai-daily-brief
+      thursday:
+        - news.arxiv
+        - people.swyx
+      friday:
+        - topics.consulting-reports
+
+  tier_3_weekly:
+    description: "Periodic checks (Fridays)"
+    budget: 3
+    sources:
+      - organizations.kpmg
+      - organizations.bcg
+      - organizations.mckinsey
+
+projects:
+  lawly:
+    status: exploratory
+    description: "Legal AI platform for Polish small law firms"
+    watch_topics: [legal-ai, compliance, rag, document-generation]
+
+  consulting:
+    status: active
+    description: "AI workspace readiness consulting"
+    watch_topics: [ai-adoption, context-engineering, future-of-work, ai-agents, organizational-change]
+
+# Project → Topic mapping for auto-tagging
+topic_project_mapping:
+  consulting:
+    - ai-adoption
+    - context-engineering
+    - future-of-work
+    - ai-agents
+    - organizational-change
+    - ai-education
+    - ai-strategy
+    - ai-engineering
+    - llm-tools
+  lawly:
+    - legal-ai
+    - compliance
+    - rag
+    - document-generation

@@ -1,0 +1,47 @@
+# Podcast sources for AI Digest
+
+ai-daily-brief:
+  name: AI Daily Brief
+  type: podcast
+  host: NLW (Nathaniel Whittemore)
+  rss: https://feeds.megaphone.fm/GMAYL4628016451
+  apple: https://podcasts.apple.com/us/podcast/the-ai-daily-brief-artificial-intelligence-news/id1680633614
+  spotify: https://open.spotify.com/show/7gKwwMLFLc6RmjmRpbMtEO
+  topics: [ai-news, ai-strategy, ai-adoption]
+  priority: medium
+  fetch_strategy: rss
+  frequency: daily
+  notes: "Daily AI news analysis, good for staying current"
+
+latent-space:
+  name: Latent Space
+  type: podcast
+  host: swyx + Alessio
+  rss: https://api.substack.com/feed/podcast/1084089.rss
+  website: https://latent.space/podcast
+  apple: https://podcasts.apple.com/us/podcast/latent-space-the-ai-engineer-podcast/id1674008350
+  spotify: https://open.spotify.com/show/2p7zZVwVF6Yk0Zsb4QmT7t
+  topics: [ai-engineering, ai-agents, llm-tools, ai-infrastructure]
+  priority: high
+  fetch_strategy: rss
+  frequency: weekly
+  notes: "Technical, AI Engineer focused, excellent guests from OpenAI/Anthropic/etc"
+
+vanishing-gradients:
+  name: Vanishing Gradients
+  type: podcast
+  host: Hugo Bowne-Anderson
+  rss: https://feeds.fireside.fm/vanishinggradients/rss
+  website: https://vanishinggradients.fireside.fm/
+  apple: https://podcasts.apple.com/us/podcast/vanishing-gradients/id1610318868
+  spotify: https://open.spotify.com/show/3yuz89gqAhcMcdy3SZPe4X
+  topics: [machine-learning, data-science, ai-engineering, context-engineering]
+  priority: medium
+  fetch_strategy: rss
+  frequency: weekly
+  notes: "Long-form conversations, technical depth, good for context engineering topics"
+
+# To research/add:
+# - MLOps Community podcast
+# - Practical AI
+# - Gradient Dissent (Weights & Biases)

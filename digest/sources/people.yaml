@@ -1,0 +1,63 @@
+# People sources for AI Digest
+# Key individuals to monitor
+
+mollick:
+  name: Ethan Mollick
+  type: person
+  blog: oneusefulthing.org
+  rss: https://www.oneusefulthing.org/feed
+  twitter: emollick
+  topics: [ai-adoption, ai-education, organizational-change]
+  priority: high
+  fetch_strategy: rss
+
+karpathy:
+  name: Andrej Karpathy
+  type: person
+  twitter: karpathy
+  youtube: AndrejKarpathy
+  topics: [llm-internals, agent-architectures, ai-engineering]
+  priority: high
+  fetch_strategy: [youtube, twitter_search]
+
+willison:
+  name: Simon Willison
+  type: person
+  blog: simonwillison.net
+  rss: https://simonwillison.net/atom/everything/
+  topics: [llm-tools, prompt-engineering, ai-ethics]
+  priority: medium
+  fetch_strategy: rss
+
+torres:
+  name: Teresa Torres
+  type: person
+  blog: producttalk.org
+  rss: https://www.producttalk.org/feed/
+  topics: [product-discovery, continuous-discovery, ai-product]
+  priority: medium
+  fetch_strategy: rss
+
+nate-jones:
+  name: Nate B Jones
+  type: person
+  blog: natebjones.com
+  substack: natesnewsletter.substack.com
+  rss: https://natesnewsletter.substack.com/feed
+  twitter: naborjones
+  topics: [ai-strategy, ai-adoption, ai-agents]
+  priority: high
+  fetch_strategy: [rss, websearch]
+  notes: "Daily AI newsletter, ex-Amazon, practical AI implementation"
+
+swyx:
+  name: swyx (Shawn Wang)
+  type: person
+  blog: swyx.io
+  substack: latent.space
+  rss: https://www.latent.space/feed
+  twitter: swyx
+  topics: [ai-engineering, ai-agents, llm-tools]
+  priority: medium
+  fetch_strategy: rss
+  notes: "Latent Space podcast co-host, AI Engineer focus"

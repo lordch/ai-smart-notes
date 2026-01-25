@@ -1,0 +1,33 @@
+# News sources for AI Digest
+
+arstechnica:
+  name: Ars Technica AI
+  type: news
+  rss: https://feeds.arstechnica.com/arstechnica/technology-lab
+  topics: [ai-news, tech]
+  priority: medium
+  fetch_strategy: rss
+
+techcrunch:
+  name: TechCrunch AI
+  type: news
+  rss: https://techcrunch.com/category/artificial-intelligence/feed/
+  topics: [ai-news, startups]
+  priority: medium
+  fetch_strategy: rss
+
+theverge:
+  name: The Verge AI
+  type: news
+  rss: https://www.theverge.com/rss/ai-artificial-intelligence/index.xml
+  topics: [ai-news]
+  priority: low
+  fetch_strategy: rss
+
+arxiv:
+  name: ArXiv AI
+  type: academic
+  rss: https://rss.arxiv.org/rss/cs.AI
+  topics: [research, papers]
+  priority: medium
+  fetch_strategy: rss

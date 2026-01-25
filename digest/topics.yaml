@@ -1,0 +1,56 @@
+# Topic clusters for AI Digest
+# Used for filtering and WebSearch queries
+
+context-engineering:
+  description: "Zarzadzanie kontekstem w AI agents, prompt engineering 2.0"
+  queries:
+    - "context engineering AI"
+    - "AI agent memory systems"
+    - "context window management"
+  related: [rag, memory-systems]
+  project_relevance: [consulting]
+
+ai-agents:
+  description: "Architektury agentow, frameworki, praktyczne wdrozenia"
+  queries:
+    - "AI agent architecture"
+    - "LLM agents production"
+    - "autonomous AI agents"
+  related: [coding-agents, claude-code, tool-use]
+  project_relevance: [consulting]
+
+ai-slop:
+  description: "Problemy z AI-generated content, failures, quality issues"
+  queries:
+    - "AI slop"
+    - "AI generated content failure"
+    - "LLM hallucination examples"
+  related: [content-moderation, detection]
+  project_relevance: []
+
+future-of-work:
+  description: "Wplyw AI na prace, produktywnosc, organizacje"
+  queries:
+    - "AI jobs impact"
+    - "AI productivity study"
+    - "AI augmentation work"
+  related: [ai-adoption, organizational-change]
+  project_relevance: [consulting]
+
+legal-ai:
+  description: "AI w branzy prawniczej, compliance, automatyzacja"
+  queries:
+    - "legal AI tools"
+    - "AI law firm"
+    - "legal document automation"
+  related: [document-generation, compliance, rag]
+  project_relevance: [lawly]
+
+product-discovery:
+  description: "AI w product discovery, badania uzytkownikow"
+  queries:
+    - "AI product discovery"
+    - "AI user research"
+    - "continuous discovery AI"
+  related: [teresa-torres-method]
+  project_relevance: [consulting]

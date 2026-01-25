@@ -54,6 +54,13 @@ function pmApp() {
                     });
                 }
             });
+
+            // Handle clicks on markdown links (delegate from document)
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.prose a')) {
+                    this.handleMarkdownClick(e);
+                }
+            });
         },
 
         async loadData() {
@@ -132,6 +139,16 @@ function pmApp() {
             }
         },
 
+        openLinkedProject(projectLink) {
+            const name = this.extractName(projectLink);
+            if (!name) return;
+
+            const project = this.projects.find(p => p.name === name || projectLink.includes(p.name));
+            if (project) {
+                this.openEntity(project);
+            }
+        },
+
         // Folder and file operations
         async loadFolder(folderPath) {
             this.currentFolder = folderPath;
@@ -155,8 +172,10 @@ function pmApp() {
         },
 
         async loadFile(file) {
+            // Accept either file object or path string
+            const filePath = typeof file === 'string' ? file : file.path;
             try {
-                const response = await fetch(`/api/file?path=${encodeURIComponent(file.path)}`);
+                const response = await fetch(`/api/file?path=${encodeURIComponent(filePath)}`);
                 if (response.ok) {
                     this.currentFile = await response.json();
                     this.view = 'file';
@@ -166,6 +185,62 @@ function pmApp() {
             } catch (error) {
                 console.error('Failed to load file:', error);
                 this.showToast('Failed to load file');
+            }
+        },
+
+        // Handle clicks on markdown links
+        handleMarkdownClick(event) {
+            const link = event.target.closest('a');
+            if (!link) return;
+
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            // Skip external links and anchors
+            if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('#')) {
+                return; // Let browser handle
+            }
+
+            // Prevent default navigation
+            event.preventDefault();
+
+            // Clean up the path (remove leading slash if present)
+            let fullPath = href.replace(/^\//, '');
+
+            // If path starts with known root folders, use as-is (absolute from project root)
+            const rootFolders = ['tasks/', 'pm/', 'concepts/', 'literature/', 'sources/', 'strategy/', 'blog/'];
+            const isAbsolutePath = rootFolders.some(folder => fullPath.startsWith(folder));
+
+            // If not absolute, resolve relative to current context
+            if (!isAbsolutePath) {
+                let currentDir = '';
+
+                if (this.currentFile?.path) {
+                    // Relative to current file's directory
+                    currentDir = this.currentFile.path.split('/').slice(0, -1).join('/');
+                } else if (this.currentEntity?.path) {
+                    // Relative to entity's directory
+                    currentDir = this.currentEntity.path.split('/').slice(0, -1).join('/');
+                }
+
+                if (currentDir) {
+                    fullPath = `${currentDir}/${fullPath}`;
+                }
+            }
+
+            // Normalize path (remove ./ and resolve ../)
+            fullPath = fullPath.replace(/\/\.\//g, '/');
+            while (fullPath.includes('/../')) {
+                fullPath = fullPath.replace(/[^\/]+\/\.\.\//g, '');
+            }
+
+            console.log('Opening path:', fullPath);
+
+            // Check if it's a folder or file
+            if (fullPath.endsWith('/') || !fullPath.includes('.')) {
+                this.loadFolder(fullPath.replace(/\/$/, ''));
+            } else {
+                this.loadFile(fullPath);
             }
         },
 
@@ -198,6 +273,37 @@ function pmApp() {
                 return match[1].replace('Person - ', '');
             }
             return person;
+        },
+
+        // Bidirectional relationships
+        getTasksForProject(project) {
+            if (!project) return [];
+            const projectName = project.name;
+            return this.tasks.filter(task => {
+                const taskProject = task.metadata.project;
+                if (!taskProject) return false;
+                return taskProject.includes(projectName) || taskProject.includes(`Project - ${projectName}`);
+            });
+        },
+
+        getProjectsForPerson(person) {
+            if (!person) return [];
+            const personName = person.name;
+            return this.projects.filter(project => {
+                const projectPerson = project.metadata.person;
+                if (!projectPerson) return false;
+                return projectPerson.includes(personName) || projectPerson.includes(`Person - ${personName}`);
+            });
+        },
+
+        getTasksForPerson(person) {
+            if (!person) return [];
+            const personName = person.name;
+            return this.tasks.filter(task => {
+                const taskPerson = task.metadata.person;
+                if (!taskPerson) return false;
+                return taskPerson.includes(personName) || taskPerson.includes(`Person - ${personName}`);
+            });
         },
 
         extractName(link) {
