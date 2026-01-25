@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .sortable-ghost { opacity: 0.4; }
+        .sortable-drag { opacity: 0.9; }
+
+        /* Markdown styles */
+        .prose h1 { font-size: 1.5rem; font-weight: 700; margin-top: 1rem; margin-bottom: 0.5rem; }
+        .prose h2 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: #93c5fd; }
+        .prose h3 { font-size: 1.1rem; font-weight: 600; margin-top: 0.75rem; margin-bottom: 0.25rem; }
+        .prose p { margin-bottom: 0.75rem; line-height: 1.6; }
+        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 0.75rem; }
+        .prose ol { list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 0.75rem; }
+        .prose li { margin-bottom: 0.25rem; }
+        .prose code { background: #374151; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875rem; }
+        .prose pre { background: #1f2937; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1rem; }
+        .prose pre code { background: transparent; padding: 0; }
+        .prose a { color: #60a5fa; text-decoration: underline; }
+        .prose blockquote { border-left: 3px solid #4b5563; padding-left: 1rem; color: #9ca3af; font-style: italic; margin: 1rem 0; }
+        .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+        .prose th, .prose td { border: 1px solid #374151; padding: 0.5rem; text-align: left; }
+        .prose th { background: #1f2937; }
+        .prose strong { color: #f3f4f6; }
+
+        .bg-gray-850 { background-color: #1a1f2e; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <div x-data="pmApp()" x-init="init()" x-cloak class="min-h-screen flex flex-col">
+
+        <!-- Top Bar -->
+        <header class="bg-gray-800 border-b border-gray-700 px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <h1 class="text-xl font-bold text-white cursor-pointer hover:text-blue-400 transition" @click="goHome()">PM Dashboard</h1>
+
+                <!-- Breadcrumbs -->
+                <template x-if="view !== 'board'">
+                    <nav class="flex items-center text-sm text-gray-400">
+                        <span class="mx-2">/</span>
+                        <span x-text="currentEntity?.type" class="text-gray-500"></span>
+                        <span class="mx-2">/</span>
+                        <span x-text="currentEntity?.name" class="text-white"></span>
+                        <template x-if="currentFile">
+                            <span>
+                                <span class="mx-2">/</span>
+                                <span x-text="currentFile.name" class="text-blue-400"></span>
+                            </span>
+                        </template>
+                    </nav>
+                </template>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <template x-if="view !== 'board'">
+                    <button @click="goBack()" class="text-gray-400 hover:text-white px-3 py-1 rounded hover:bg-gray-700 transition">
+                        &larr; Back
+                    </button>
+                </template>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-hidden">
+
+            <!-- Board View -->
+            <div x-show="view === 'board'" class="h-full flex flex-col p-6">
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-4">
+                    <button @click="activeTab = 'tasks'"
+                        :class="activeTab === 'tasks' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'"
+                        class="px-4 py-2 rounded-lg font-medium transition">
+                        Tasks
+                    </button>
+                    <button @click="activeTab = 'projects'"
+                        :class="activeTab === 'projects' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'"
+                        class="px-4 py-2 rounded-lg font-medium transition">
+                        Projects
+                    </button>
+                    <button @click="activeTab = 'people'"
+                        :class="activeTab === 'people' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'"
+                        class="px-4 py-2 rounded-lg font-medium transition">
+                        People
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex gap-4 flex-wrap mb-4">
+                    <template x-if="activeTab === 'tasks'">
+                        <div class="flex gap-4">
+                            <select x-model="filters.person" class="bg-gray-700 rounded px-3 py-2 text-sm">
+                                <option value="">All People</option>
+                                <template x-for="person in people" :key="person.id">
+                                    <option :value="person.name" x-text="person.name"></option>
+                                </template>
+                            </select>
+                            <select x-model="filters.project" class="bg-gray-700 rounded px-3 py-2 text-sm">
+                                <option value="">All Projects</option>
+                                <template x-for="project in projects" :key="project.id">
+                                    <option :value="project.name" x-text="project.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Loading -->
+                <div x-show="loading" class="text-center py-12">
+                    <div class="text-gray-400">Loading...</div>
+                </div>
+
+                <!-- Tasks Kanban -->
+                <div x-show="!loading && activeTab === 'tasks'" class="grid grid-cols-4 gap-4 flex-1 overflow-auto">
+                    <template x-for="status in taskStatuses" :key="status">
+                        <div class="bg-gray-800 rounded-lg p-4 flex flex-col">
+                            <h2 class="font-semibold mb-3 text-gray-300" x-text="status"></h2>
+                            <div :id="'tasks-' + status.toLowerCase().replace(' ', '-')"
+                                 :data-status="status"
+                                 class="space-y-2 flex-1 overflow-auto task-column">
+                                <template x-for="task in filteredTasks.filter(t => t.status === status)" :key="task.id">
+                                    <div :data-id="task.id"
+                                         class="bg-gray-700 rounded-lg p-3 cursor-pointer hover:bg-gray-600 transition task-card"
+                                         @click="openEntity(task)">
+                                        <div class="font-medium text-sm" x-text="task.name"></div>
+                                        <div class="text-xs text-gray-400 mt-1" x-show="getPersonFromTask(task)">
+                                            <span x-text="getPersonFromTask(task)"></span>
+                                        </div>
+                                        <div class="text-xs text-gray-500 mt-1" x-show="getProjectFromTask(task)">
+                                            <span x-text="getProjectFromTask(task)"></span>
+                                        </div>
+                                        <div class="flex gap-1 mt-2 flex-wrap">
+                                            <span x-show="task.metadata.priority === 'High'"
+                                                  class="text-xs bg-red-900 text-red-200 px-2 py-0.5 rounded">High</span>
+                                            <span x-show="task.metadata.priority === 'Medium'"
+                                                  class="text-xs bg-yellow-900 text-yellow-200 px-2 py-0.5 rounded">Medium</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Projects Board -->
+                <div x-show="!loading && activeTab === 'projects'" class="grid grid-cols-4 gap-4 flex-1 overflow-auto">
+                    <template x-for="status in projectStatuses" :key="status">
+                        <div class="bg-gray-800 rounded-lg p-4 flex flex-col">
+                            <h2 class="font-semibold mb-3 text-gray-300" x-text="status"></h2>
+                            <div :id="'projects-' + status.toLowerCase().replace(' ', '-')"
+                                 :data-status="status"
+                                 class="space-y-2 flex-1 overflow-auto project-column">
+                                <template x-for="project in projects.filter(p => p.status === status)" :key="project.id">
+                                    <div :data-id="project.id"
+                                         class="bg-gray-700 rounded-lg p-3 cursor-pointer hover:bg-gray-600 transition project-card"
+                                         @click="openEntity(project)">
+                                        <div class="font-medium text-sm" x-text="project.name"></div>
+                                        <div class="text-xs text-gray-400 mt-1" x-show="getPersonFromProject(project)">
+                                            <span x-text="getPersonFromProject(project)"></span>
+                                        </div>
+                                        <div class="flex gap-1 mt-2 flex-wrap">
+                                            <span x-show="project.metadata.priority === 'High'"
+                                                  class="text-xs bg-red-900 text-red-200 px-2 py-0.5 rounded">High</span>
+                                            <template x-if="project.metadata.folders?.length">
+                                                <span class="text-xs bg-gray-600 px-2 py-0.5 rounded"
+                                                      x-text="project.metadata.folders.length + ' folder(s)'"></span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- People Pipeline -->
+                <div x-show="!loading && activeTab === 'people'" class="grid grid-cols-4 gap-4 flex-1 overflow-auto">
+                    <template x-for="role in personRoles" :key="role">
+                        <div class="bg-gray-800 rounded-lg p-4 flex flex-col">
+                            <h2 class="font-semibold mb-3 text-gray-300" x-text="role"></h2>
+                            <div class="space-y-2 flex-1 overflow-auto">
+                                <template x-for="person in people.filter(p => p.metadata.role === role)" :key="person.id">
+                                    <div class="bg-gray-700 rounded-lg p-3 hover:bg-gray-600 transition cursor-pointer"
+                                         @click="openEntity(person)">
+                                        <div class="font-medium text-sm" x-text="person.name"></div>
+                                        <div class="text-xs text-gray-400 mt-1" x-show="person.metadata.company"
+                                             x-text="person.metadata.company"></div>
+                                        <div class="flex gap-1 mt-2 flex-wrap">
+                                            <template x-for="tag in (person.metadata.tags || []).slice(0, 2)" :key="tag">
+                                                <span class="text-xs bg-gray-600 px-2 py-0.5 rounded" x-text="tag"></span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Detail View -->
+            <div x-show="view === 'detail'" class="h-full flex">
+                <!-- Left Panel: Entity Info -->
+                <div class="w-1/2 border-r border-gray-700 flex flex-col overflow-hidden">
+                    <!-- Entity Header -->
+                    <div class="p-6 border-b border-gray-700 bg-gray-800">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <span class="text-xs text-gray-400 uppercase tracking-wide" x-text="currentEntity?.type"></span>
+                                <h2 class="text-2xl font-bold text-white mt-1" x-text="currentEntity?.name"></h2>
+                            </div>
+                            <button @click="copyPath(currentEntity?.path)"
+                                    class="text-gray-400 hover:text-white px-3 py-1 text-sm rounded hover:bg-gray-700 transition">
+                                Copy Path
+                            </button>
+                        </div>
+
+                        <!-- Meta badges -->
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="text-xs bg-blue-900 text-blue-200 px-2 py-1 rounded"
+                                  x-text="'Status: ' + currentEntity?.status"></span>
+                            <span x-show="currentEntity?.metadata?.priority"
+                                  class="text-xs px-2 py-1 rounded"
+                                  :class="currentEntity?.metadata?.priority === 'High' ? 'bg-red-900 text-red-200' : 'bg-yellow-900 text-yellow-200'"
+                                  x-text="'Priority: ' + currentEntity?.metadata?.priority"></span>
+                            <span x-show="currentEntity?.metadata?.role"
+                                  class="text-xs bg-purple-900 text-purple-200 px-2 py-1 rounded"
+                                  x-text="'Role: ' + currentEntity?.metadata?.role"></span>
+                            <span x-show="currentEntity?.metadata?.person"
+                                  class="text-xs bg-green-900 text-green-200 px-2 py-1 rounded cursor-pointer hover:bg-green-800"
+                                  @click="openLinkedPerson(currentEntity?.metadata?.person)"
+                                  x-text="extractName(currentEntity?.metadata?.person)"></span>
+                        </div>
+                    </div>
+
+                    <!-- Entity Content -->
+                    <div class="flex-1 overflow-auto p-6">
+                        <div class="prose text-gray-300" x-html="renderMarkdown(currentEntity?.content)"></div>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Folders & Files -->
+                <div class="w-1/2 flex flex-col overflow-hidden bg-gray-850">
+                    <template x-if="currentEntity?.metadata?.folders?.length">
+                        <div class="flex-1 overflow-auto">
+                            <!-- Folders List -->
+                            <div class="p-4 border-b border-gray-700">
+                                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">Project Folders</h3>
+                                <div class="space-y-2">
+                                    <template x-for="folder in currentEntity?.metadata?.folders" :key="folder">
+                                        <button @click="loadFolder(folder)"
+                                                class="w-full text-left px-3 py-2 rounded transition"
+                                                :class="currentFolder === folder ? 'bg-blue-900 text-blue-200' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'">
+                                            <span class="text-sm font-medium" x-text="folder.split('/').pop()"></span>
+                                            <span class="text-xs text-gray-500 block" x-text="folder"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Files in Selected Folder -->
+                            <template x-if="currentFolder && folderFiles.length">
+                                <div class="p-4">
+                                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                                        Files in <span class="text-gray-300" x-text="currentFolder.split('/').pop()"></span>
+                                    </h3>
+                                    <div class="space-y-1">
+                                        <template x-for="file in folderFiles" :key="file.path">
+                                            <button @click="file.is_dir ? loadFolder(file.path) : loadFile(file)"
+                                                    class="w-full text-left px-3 py-2 rounded transition flex items-center gap-2"
+                                                    :class="currentFile?.path === file.path ? 'bg-blue-900 text-blue-200' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'">
+                                                <span x-text="file.is_dir ? '📁' : '📄'" class="text-sm"></span>
+                                                <span class="text-sm truncate flex-1" x-text="file.name"></span>
+                                            </button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- Loading folder -->
+                            <template x-if="loadingFolder">
+                                <div class="p-4 text-gray-500 text-center">Loading...</div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <!-- No folders message -->
+                    <template x-if="!currentEntity?.metadata?.folders?.length">
+                        <div class="flex-1 flex items-center justify-center text-gray-500">
+                            <div class="text-center">
+                                <p class="text-lg">No folders linked</p>
+                                <p class="text-sm mt-2">Add <code class="bg-gray-700 px-1 rounded">folders:</code> to project frontmatter</p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- File Preview View -->
+            <div x-show="view === 'file'" class="h-full flex flex-col">
+                <!-- File Header -->
+                <div class="p-4 border-b border-gray-700 bg-gray-800 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-gray-500" x-text="currentFile?.path"></span>
+                        <h2 class="text-lg font-semibold text-white" x-text="currentFile?.name"></h2>
+                    </div>
+                    <div class="flex gap-2">
+                        <button @click="copyPath(currentFile?.path)"
+                                class="text-gray-400 hover:text-white px-3 py-1 text-sm rounded hover:bg-gray-700 transition">
+                            Copy Path
+                        </button>
+                        <button @click="view = 'detail'; currentFile = null"
+                                class="text-gray-400 hover:text-white px-3 py-2 text-sm rounded hover:bg-gray-700 transition">
+                            &times; Close
+                        </button>
+                    </div>
+                </div>
+
+                <!-- File Content -->
+                <div class="flex-1 overflow-auto p-8 bg-gray-850">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="prose text-gray-300" x-html="renderMarkdown(currentFile?.content)"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast notification -->
+        <div x-show="toast.show"
+             x-transition
+             class="fixed bottom-4 right-4 bg-gray-700 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+            <span x-text="toast.message"></span>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
